@@ -240,6 +240,9 @@ window.openLink = function(url) {
     if (url) window.open(url, '_blank');
 };
 
+/* =========================================================
+   មុខងារ SHARE មួយៗ (មាន Auto-Copy Caption ស្រាប់)
+   ========================================================= */
 window.shareSingle = function(id) {
     const group = groups.find(g => g.id === id);
     const caption = captionInput ? captionInput.value.trim() : "";
@@ -250,6 +253,13 @@ window.shareSingle = function(id) {
         return;
     }
 
+    // Auto-Copy Caption ចូល Clipboard ស្វ័យប្រវត្តិ
+    if (caption && navigator.clipboard) {
+        navigator.clipboard.writeText(caption).catch(err => {
+            console.error("មិនអាច Copy បាន:", err);
+        });
+    }
+
     const shareLink = postUrl 
         ? `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`
         : group.url;
@@ -258,6 +268,9 @@ window.shareSingle = function(id) {
     addHistoryRecord(group.url, caption || "Post Update");
 };
 
+/* =========================================================
+   មុខងារ SHARE ទាំងអស់ (មាន Auto-Copy Caption ស្រាប់)
+   ========================================================= */
 if (sharePostBtn) {
     sharePostBtn.addEventListener('click', () => {
         const selectedGroups = groups.filter(g => g.selected && g.url);
@@ -267,6 +280,13 @@ if (sharePostBtn) {
         if (selectedGroups.length === 0) {
             alert("សូមជ្រើសរើស Group យ៉ាងហោចណាស់មួយដែលមាន Link URL!");
             return;
+        }
+
+        // Auto-Copy Caption ចូល Clipboard ស្វ័យប្រវត្តិ
+        if (caption && navigator.clipboard) {
+            navigator.clipboard.writeText(caption).catch(err => {
+                console.error("មិនអាច Copy បាន:", err);
+            });
         }
 
         selectedGroups.forEach(group => {
