@@ -1,7 +1,68 @@
 /* =========================================================
    GroupShare Manager 2027 - Logic Controller (script.js)
    ========================================================= */
+/* =========================================================
+   FACEBOOK SDK & LOGIN SETUP
+   ========================================================= */
 
+// ១. កំណត់ Facebook App ID (ជំនួស YOUR_FACEBOOK_APP_ID ដោយ App ID ពិតរបស់អ្នក)
+const FB_APP_ID = 'YOUR_FACEBOOK_APP_ID'; 
+
+// ២. Load Facebook SDK ដោយស្វ័យប្រវត្តិ
+window.fbAsyncInit = function() {
+    FB.init({
+        appId      : FB_APP_ID,
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v19.0'
+    });
+
+    // ពិនិត្យមើលថាតើ User ធ្លាប់ Login ហើយឬនៅ
+    FB.getLoginStatus(function(response) {
+        statusChangeCallback(response);
+    });
+};
+
+(function(d, s, id){
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {return;}
+    js = d.createElement(s); js.id = id;
+    js.src = "https://connect.facebook.net/km_KH/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+// ៣. មុខងារពិនិត្យស្ថានភាព Login
+function statusChangeCallback(response) {
+    const loginBtn = document.getElementById('loginBtn');
+    if (response.status === 'connected') {
+        // ប្រសិនបើ Login ជោគជ័យ -> ទាញយកឈ្មោះ និងរូប Profile
+        FB.api('/me', {fields: 'name,picture'}, function(user) {
+            loginBtn.innerHTML = `
+                <img src="${user.picture.data.url}" style="width:22px; height:22px; border-radius:50%; vertical-align:middle; margin-right:5px;">
+                ${user.name} (ចាកចេញ)
+            `;
+            loginBtn.onclick = fbLogout;
+        });
+    } else {
+        // ប្រសិនបើមិនទាន់ Login
+        loginBtn.innerHTML = `<span>🔵</span> ចូលគណនី (Facebook Login)`;
+        loginBtn.onclick = fbLogin;
+    }
+}
+
+// ៤. ដំណើរការ Login ពេលចុច
+function fbLogin() {
+    FB.login(function(response) {
+        statusChangeCallback(response);
+    }, {scope: 'public_profile,email'});
+}
+
+// ៥. ដំណើរការ Logout
+function fbLogout() {
+    FB.logout(function(response) {
+        statusChangeCallback(response);
+    });
+}
 // ១. ទិន្នន័យគំរូដើម (Initial Default Data)
 const initialGroups = [
     { id: 1, name: "Facebook Group 1", url: "https://web.facebook.com/groups/116079099082791", selected: true },
