@@ -1,100 +1,6 @@
-<!DOCTYPE html>
-<html lang="km">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GroupShare Manager 2027</title>
-    <!-- Google Font: Kantumruy Pro -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-   <!-- Header Navbar -->
-<header class="top-navbar">
-    <div class="brand-logo">🚀 Group Share Manager <span>2027</span></div>
-    <button type="button" class="login-btn" id="loginBtn">ចូលគណនី (Login)</button>
-</header>
-
-    <main class="app-container">
-
-        <!-- Banner -->
-        <section class="title-box">
-            <h1>ផ្ទាំងគ្រប់គ្រង (Dashboard)</h1>
-            <p>គ្រប់គ្រង Facebook Groups និងរៀបចំ Post ដើម្បី Share ទៅកាន់ Groups របស់អ្នក។</p>
-        </section>
-
-        <!-- 3 Stat Cards -->
-        <section class="stats-row" aria-label="ស្ថិតិសង្ខេប">
-            <div class="stat-box">
-                <div class="stat-icon purple">👥</div>
-                <div class="stat-data">
-                    <h4>Groups សរុប</h4>
-                    <strong id="totalGroups">0</strong>
-                </div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-icon green">✅</div>
-                <div class="stat-data">
-                    <h4>បាន Share ជោគជ័យ</h4>
-                    <strong id="successCount">0</strong>
-                </div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-icon yellow">⏳</div>
-                <div class="stat-data">
-                    <h4>កំពុងរង់ចាំ (Waiting)</h4>
-                    <strong id="waitingCount">0</strong>
-                </div>
-            </div>
-        </section>
-
-        <!-- Workspace Grid -->
-        <div class="workspace-grid">
-            
-            <!-- Left Column: Create Post & Tips -->
+<!-- Right Column: Groups & History -->
             <div class="side-col">
                 <section class="ui-card">
-                    <h2 class="ui-card-title">📝 បង្កើត Post ថ្មី</h2>
-                    <p class="ui-card-subtitle">បញ្ចូល Caption និង Link របស់ Post សម្រាប់ Share</p>
-
-                    <form id="postForm" onsubmit="return false;">
-                        <div class="form-group">
-                            <label for="caption">អត្ថបទ (Caption)</label>
-                            <textarea id="caption" placeholder="សរសេរ Caption របស់អ្នកនៅទីនេះ..."></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="postUrl">តំណភ្ជាប់ Post/Website (URL)</label>
-                            <input type="url" id="postUrl" placeholder="https://example.com/post/123">
-                        </div>
-
-                        <div class="form-btns">
-                            <button type="button" class="btn btn-main" id="sharePostBtn">🚀 Share ទៅ Groups ដែលបានជ្រើស</button>
-                            <button type="button" class="btn btn-clear" id="clearBtn">សម្អាត</button>
-                        </div>
-                    </form>
-                </section>
-
-                <section class="ui-card tips-card">
-                    <h2 class="ui-card-title tips-title">💡 របៀបប្រើប្រាស់</h2>
-                    <ol>
-                        <li>ចុច <strong>+ Add Group</strong> ដើម្បីបន្ថែម Facebook Group ថ្មី។</li>
-                        <li>បញ្ចូលឈ្មោះ និង Link របស់ Group ឱ្យបានត្រឹមត្រូវ។</li>
-                        <li>បញ្ចូល Caption និង Post URL ក្នុងទម្រង់ខាងលើ។</li>
-                        <li>ធីកជ្រើសរើស Groups ដែលអ្នកចង់ Share។</li>
-                        <li>ចុច <strong>Share Post</strong> ដើម្បីចាប់ផ្ដើម។</li>
-                    </ol>
-                </section>
-            </div>
-
-            <!-- Right Column: Groups & History -->
-            <div class="side-col">
-                <section class="ui-card">
-
-                    <!-- 👉 ដាក់ជំនួសត្រង់កន្លែងនេះ 👈 -->
                     <div class="card-header-flex">
                         <div>
                             <h2 class="ui-card-title">👥 បញ្ជី Groups</h2>
@@ -111,34 +17,13 @@
                         <button type="button" class="btn-pill" id="unselectAllBtn">✕ Unselect All</button>
                     </div>
 
-                    <div class="selection-toolbar">
-                        <button type="button" class="btn-pill" id="selectAllBtn">✓ Select All</button>
-                        <button type="button" class="btn-pill" id="unselectAllBtn">✕ Unselect All</button>
-                    </div>
-
-                    <!-- Groups List (ទុកទទេដើម្បីឱ្យ JS render ទិន្នន័យស្វ័យប្រវត្តិ) -->
+                    <!-- 👉 ត្រូវប្រាកដថាមានជួរនេះ 👈 -->
                     <div class="group-items-list" id="groupsList"></div>
                 </section>
 
-                <!-- History -->
                 <section class="ui-card">
-                    <h2 class="ui-card-title">🕒 ប្រវត្តិការ Share (Share History)</h2>
-                    <p class="ui-card-subtitle">ប្រវត្តិការរៀបចំ Share Post របស់អ្នកកន្លងមក</p>
-
-                    <!-- History List (ទុកទទេដើម្បីឱ្យ JS render ទិន្នន័យស្វ័យប្រវត្តិ) -->
+                    <h2 class="ui-card-title">📜 ប្រវត្តិ Share ថ្មីៗ (History)</h2>
+                    <p class="ui-card-subtitle">កំណត់ត្រា Post ដែលបាន Share ជោគជ័យ</p>
                     <div id="historyList"></div>
                 </section>
             </div>
-
-        </div>
-
-        <footer>
-            © 2027 GroupShare Manager • រក្សាសិទ្ធិគ្រប់យ៉ាង
-        </footer>
-
-    </main>
-
-    <!-- Script File -->
-    <script src="script.js"></script>
-</body>
-</html>
