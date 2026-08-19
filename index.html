@@ -15,69 +15,71 @@
     <!-- Header Navbar -->
     <header class="top-navbar">
         <div class="brand-logo">🚀 GroupShare <span>2027</span></div>
-        <button class="login-btn">ចូលគណនី (Login)</button>
+        <button type="button" class="login-btn">ចូលគណនី (Login)</button>
     </header>
 
-    <div class="app-container">
+    <main class="app-container">
 
         <!-- Banner -->
-        <div class="title-box">
+        <section class="title-box">
             <h1>ផ្ទាំងគ្រប់គ្រង (Dashboard)</h1>
             <p>គ្រប់គ្រង Facebook Groups និងរៀបចំ Post ដើម្បី Share ទៅកាន់ Groups របស់អ្នក។</p>
-        </div>
+        </section>
 
         <!-- 3 Stat Cards -->
-        <div class="stats-row">
+        <section class="stats-row" aria-label="ស្ថិតិសង្ខេប">
             <div class="stat-box">
                 <div class="stat-icon purple">👥</div>
                 <div class="stat-data">
                     <h4>Groups សរុប</h4>
-                    <strong id="totalGroups">3</strong>
+                    <strong id="totalGroups">0</strong>
                 </div>
             </div>
             <div class="stat-box">
                 <div class="stat-icon green">✅</div>
                 <div class="stat-data">
                     <h4>បាន Share ជោគជ័យ</h4>
-                    <strong id="successCount">1</strong>
+                    <strong id="successCount">0</strong>
                 </div>
             </div>
             <div class="stat-box">
                 <div class="stat-icon yellow">⏳</div>
                 <div class="stat-data">
                     <h4>កំពុងរង់ចាំ (Waiting)</h4>
-                    <strong id="waitingCount">1</strong>
+                    <strong id="waitingCount">0</strong>
                 </div>
             </div>
-        </div>
+        </section>
 
         <!-- Workspace Grid -->
         <div class="workspace-grid">
             
             <!-- Left Column: Create Post & Tips -->
             <div class="side-col">
-                <div class="ui-card">
-                    <div class="ui-card-title">📝 បង្កើត Post ថ្មី</div>
-                    <div class="ui-card-subtitle">បញ្ចូល Caption និង Link របស់ Post សម្រាប់ Share</div>
+                <section class="ui-card">
+                    <h2 class="ui-card-title">📝 បង្កើត Post ថ្មី</h2>
+                    <p class="ui-card-subtitle">បញ្ចូល Caption និង Link របស់ Post សម្រាប់ Share</p>
 
-                    <div class="form-group">
-                        <label for="caption">អត្ថបទ (Caption)</label>
-                        <textarea id="caption" placeholder="សរសេរ Caption របស់អ្នកនៅទីនេះ..."></textarea>
-                    </div>
+                    <form id="postForm" onsubmit="return false;">
+                        <div class="form-group">
+                            <label for="caption">អត្ថបទ (Caption)</label>
+                            <textarea id="caption" placeholder="សរសេរ Caption របស់អ្នកនៅទីនេះ..."></textarea>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="postUrl">តំណភ្ជាប់ Post/Website (URL)</label>
-                        <input type="url" id="postUrl" placeholder="https://example.com/post/123">
-                    </div>
+                        <div class="form-group">
+                            <label for="postUrl">តំណភ្ជាប់ Post/Website (URL)</label>
+                            <input type="url" id="postUrl" placeholder="https://example.com/post/123">
+                        </div>
 
-                    <div class="form-btns">
-                        <button type="button" class="btn btn-main" id="sharePostBtn">🚀 Share ទៅ Groups ដែលបានជ្រើស</button>
-                        <button type="button" class="btn btn-clear" id="clearBtn">សម្អាត</button>
-                    </div>
-                </div>
+                        <div class="form-btns">
+                            <button type="button" class="btn btn-main" id="sharePostBtn">🚀 Share ទៅ Groups ដែលបានជ្រើស</button>
+                            <button type="button" class="btn btn-clear" id="clearBtn">សម្អាត</button>
+                        </div>
+                    </form>
+                </section>
 
-                <div class="ui-card tips-card">
-                    <div class="ui-card-title tips-title">💡 របៀបប្រើប្រាស់</div>
+                <section class="ui-card tips-card">
+                    <h2 class="ui-card-title tips-title">💡 របៀបប្រើប្រាស់</h2>
                     <ol>
                         <li>ចុច <strong>+ Add Group</strong> ដើម្បីបន្ថែម Facebook Group ថ្មី។</li>
                         <li>បញ្ចូលឈ្មោះ និង Link របស់ Group ឱ្យបានត្រឹមត្រូវ។</li>
@@ -85,16 +87,16 @@
                         <li>ធីកជ្រើសរើស Groups ដែលអ្នកចង់ Share។</li>
                         <li>ចុច <strong>Share Post</strong> ដើម្បីចាប់ផ្ដើម។</li>
                     </ol>
-                </div>
+                </section>
             </div>
 
             <!-- Right Column: Groups & History -->
             <div class="side-col">
-                <div class="ui-card">
+                <section class="ui-card">
                     <div class="card-header-flex">
                         <div>
-                            <div class="ui-card-title">👥 បញ្ជី Groups</div>
-                            <div class="ui-card-subtitle zero-margin">ជ្រើសរើស Groups ដែលអ្នកចង់ Share Post</div>
+                            <h2 class="ui-card-title">👥 បញ្ជី Groups</h2>
+                            <p class="ui-card-subtitle zero-margin">ជ្រើសរើស Groups ដែលអ្នកចង់ Share Post</p>
                         </div>
                         <button type="button" class="btn btn-main btn-sm" id="addGroupBtn">+ Add Group</button>
                     </div>
@@ -104,75 +106,18 @@
                         <button type="button" class="btn-pill" id="unselectAllBtn">✕ Unselect All</button>
                     </div>
 
-                    <!-- Groups List -->
-                    <div class="group-items-list" id="groupsList">
-                        <!-- Group 1 -->
-                        <div class="group-row">
-                            <div class="group-left">
-                                <input type="checkbox" checked>
-                                <div class="group-text">
-                                    <strong>Facebook Group 1</strong>
-                                    <span>https://web.facebook.com/groups/116079099082791</span>
-                                </div>
-                            </div>
-                            <div class="group-right-actions">
-                                <button class="act-btn">Open</button>
-                                <button class="act-btn share">Share</button>
-                                <button class="act-btn">Edit</button>
-                                <button class="act-btn delete">Delete</button>
-                            </div>
-                        </div>
-
-                        <!-- Group 2 -->
-                        <div class="group-row">
-                            <div class="group-left">
-                                <input type="checkbox">
-                                <div class="group-text">
-                                    <strong>Facebook Group 2</strong>
-                                    <span class="no-link">⚠️ មិនទាន់មាន URL</span>
-                                </div>
-                            </div>
-                            <div class="group-right-actions">
-                                <button class="act-btn" disabled>Open</button>
-                                <button class="act-btn share" disabled>Share</button>
-                                <button class="act-btn">Edit</button>
-                                <button class="act-btn delete">Delete</button>
-                            </div>
-                        </div>
-
-                        <!-- Group 3 -->
-                        <div class="group-row">
-                            <div class="group-left">
-                                <input type="checkbox">
-                                <div class="group-text">
-                                    <strong>Facebook Group 3</strong>
-                                    <span class="no-link">⚠️ មិនទាន់មាន URL</span>
-                                </div>
-                            </div>
-                            <div class="group-right-actions">
-                                <button class="act-btn" disabled>Open</button>
-                                <button class="act-btn share" disabled>Share</button>
-                                <button class="act-btn">Edit</button>
-                                <button class="act-btn delete">Delete</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <!-- Groups List (ទុកទទេដើម្បីឱ្យ JS render ទិន្នន័យស្វ័យប្រវត្តិ) -->
+                    <div class="group-items-list" id="groupsList"></div>
+                </section>
 
                 <!-- History -->
-                <div class="ui-card">
-                    <div class="ui-card-title">🕒 ប្រវត្តិការ Share (Share History)</div>
-                    <div class="ui-card-subtitle">ប្រវត្តិការរៀបចំ Share Post របស់អ្នកកន្លងមក</div>
+                <section class="ui-card">
+                    <h2 class="ui-card-title">🕒 ប្រវត្តិការ Share (Share History)</h2>
+                    <p class="ui-card-subtitle">ប្រវត្តិការរៀបចំ Share Post របស់អ្នកកន្លងមក</p>
 
-                    <div class="history-box" id="historyList">
-                        <div class="history-header">
-                            <span>🔗 https://web.facebook.com/groups/116079099082791</span>
-                            <span class="badge-posted">● Posted</span>
-                        </div>
-                        <div class="history-desc">"TEST Caption Post"</div>
-                        <div class="history-date">📅 8/19/2026, 9:33:34 PM</div>
-                    </div>
-                </div>
+                    <!-- History List (ទុកទទេដើម្បីឱ្យ JS render ទិន្នន័យស្វ័យប្រវត្តិ) -->
+                    <div id="historyList"></div>
+                </section>
             </div>
 
         </div>
@@ -181,7 +126,7 @@
             © 2027 GroupShare Manager • រក្សាសិទ្ធិគ្រប់យ៉ាង
         </footer>
 
-    </div>
+    </main>
 
     <!-- Script File -->
     <script src="script.js"></script>
