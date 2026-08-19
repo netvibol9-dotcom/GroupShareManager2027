@@ -1,5 +1,5 @@
 /* =========================================================
-   GroupShare Manager 2027 - Complete Clean CSS
+   GroupShare Manager 2027 - Complete CSS with Hover Effects
    ========================================================= */
 
 * {
@@ -77,26 +77,31 @@ body {
     gap: 20px;
 }
 
+/* Dashboard Banner Background Gradient */
 .title-box {
-    background: var(--card-bg);
-    padding: 20px;
+    background: linear-gradient(135deg, #4338ca, #6366f1 50%, #0284c7);
+    padding: 24px 28px;
     border-radius: var(--radius);
-    border: 1px solid var(--border-color);
+    border: none;
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.18);
+    color: #ffffff;
 }
 
 .title-box h1 {
-    font-size: 1.4rem;
-    color: var(--text-dark);
-    margin-bottom: 4px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 6px;
+    letter-spacing: -0.3px;
 }
 
 .title-box p {
-    color: var(--text-gray);
-    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 0.92rem;
 }
 
 /* =========================================================
-   STATS ROW
+   STAT CARDS (HOVER ANIMATION & DISTINCT COLORS)
    ========================================================= */
 .stats-row {
     display: grid;
@@ -108,20 +113,25 @@ body {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
-    padding: 16px;
+    padding: 18px 20px;
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 16px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .stat-icon {
-    width: 46px;
-    height: 46px;
-    border-radius: 10px;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.3rem;
+    font-size: 1.35rem;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .stat-icon.purple { background: #ede9fe; color: #7c3aed; }
@@ -129,14 +139,65 @@ body {
 .stat-icon.yellow { background: #fef3c7; color: var(--warning); }
 
 .stat-data h4 {
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     color: var(--text-gray);
-    font-weight: 500;
+    font-weight: 600;
+    margin-bottom: 2px;
+    transition: color 0.25s ease;
 }
 
 .stat-data strong {
-    font-size: 1.4rem;
-    font-weight: 700;
+    font-size: 1.5rem;
+    font-weight: 800;
+    transition: color 0.25s ease;
+}
+
+/* Hover: Groups សរុប (Purple) */
+.stat-box:nth-child(1):hover {
+    background: linear-gradient(145deg, #ffffff, #f5f3ff);
+    border-color: #c4b5fd;
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px -4px rgba(124, 58, 237, 0.16);
+}
+.stat-box:nth-child(1):hover .stat-icon {
+    transform: scale(1.12) rotate(-6deg);
+    background: #7c3aed;
+    color: #ffffff;
+}
+.stat-box:nth-child(1):hover .stat-data strong {
+    color: #7c3aed;
+}
+
+/* Hover: បាន Share ជោគជ័យ (Green) */
+.stat-box:nth-child(2):hover {
+    background: linear-gradient(145deg, #ffffff, #f0fdf4);
+    border-color: #86efac;
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px -4px rgba(22, 163, 74, 0.16);
+}
+.stat-box:nth-child(2):hover .stat-icon {
+    transform: scale(1.12) rotate(6deg);
+    background: #16a34a;
+    color: #ffffff;
+}
+.stat-box:nth-child(2):hover .stat-data strong {
+    color: #16a34a;
+}
+
+/* Hover: កំពុងរង់ចាំ (Yellow/Amber) */
+.stat-box:nth-child(3):hover {
+    background: linear-gradient(145deg, #ffffff, #fffbeb);
+    border-color: #fde68a;
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px -4px rgba(217, 119, 6, 0.16);
+}
+.stat-box:nth-child(3):hover .stat-icon {
+    transform: scale(1.12) rotate(-6deg);
+    background: #d97706;
+    color: #ffffff;
+}
+.stat-box:nth-child(3):hover .stat-data strong {
+    color: #d97706;
 }
 
 /* =========================================================
@@ -242,7 +303,6 @@ body {
     transform: scale(0.97);
 }
 
-/* Main Action Buttons (+ Add Group / Share All) */
 .btn-main, 
 #addGroupBtn {
     background: linear-gradient(135deg, #4f46e5, #6366f1);
@@ -266,7 +326,6 @@ body {
     font-size: 0.8rem;
 }
 
-/* Clear Button */
 .btn-clear {
     background: #f1f5f9;
     color: #64748b;
@@ -280,7 +339,6 @@ body {
     transform: translateY(-1px);
 }
 
-/* Tips Card */
 .tips-card {
     background: #f5f3ff;
     border-color: #ddd6fe;
@@ -297,7 +355,6 @@ body {
     line-height: 1.8;
 }
 
-/* Selection Toolbar Pills */
 .card-header-flex {
     display: flex;
     justify-content: space-between;
@@ -396,7 +453,6 @@ body {
     color: var(--warning);
 }
 
-/* Group Action Buttons with Distinct Hover Colors */
 .group-right-actions {
     display: flex;
     gap: 5px;
@@ -413,7 +469,7 @@ body {
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 1. Open Button -> Sky Blue */
+/* Open Button -> Sky Blue */
 .act-btn:not(.share):not(.delete):not(:nth-child(3)) {
     background: #f1f5f9;
     color: #334155;
@@ -428,7 +484,7 @@ body {
     box-shadow: 0 4px 10px rgba(2, 132, 199, 0.25);
 }
 
-/* 2. Share Button -> Indigo/Purple */
+/* Share Button -> Indigo/Purple */
 .act-btn.share {
     background: #eef2ff;
     color: #4f46e5;
@@ -443,7 +499,7 @@ body {
     box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25);
 }
 
-/* 3. Edit Button -> Amber/Orange */
+/* Edit Button -> Amber/Orange */
 .act-btn:nth-child(3) {
     background: #fffbeb;
     color: #d97706;
@@ -458,7 +514,7 @@ body {
     box-shadow: 0 4px 10px rgba(217, 119, 6, 0.25);
 }
 
-/* 4. Delete Button -> Red */
+/* Delete Button -> Red */
 .act-btn.delete {
     background: #fef2f2;
     color: #dc2626;
