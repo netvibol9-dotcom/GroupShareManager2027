@@ -93,12 +93,22 @@
             <!-- Right Column: Groups & History -->
             <div class="side-col">
                 <section class="ui-card">
+
+                    <!-- 👉 ដាក់ជំនួសត្រង់កន្លែងនេះ 👈 -->
                     <div class="card-header-flex">
                         <div>
                             <h2 class="ui-card-title">👥 បញ្ជី Groups</h2>
                             <p class="ui-card-subtitle zero-margin">ជ្រើសរើស Groups ដែលអ្នកចង់ Share Post</p>
                         </div>
-                        <button type="button" class="btn btn-main btn-sm" id="addGroupBtn">+ Add Group</button>
+                        <div style="display: flex; gap: 8px;">
+                            <button type="button" class="btn btn-pill" id="importGroupsBtn">📥 Import ច្រើន</button>
+                            <button type="button" class="btn btn-main btn-sm" id="addGroupBtn">+ Add Group</button>
+                        </div>
+                    </div>
+
+                    <div class="selection-toolbar">
+                        <button type="button" class="btn-pill" id="selectAllBtn">✓ Select All</button>
+                        <button type="button" class="btn-pill" id="unselectAllBtn">✕ Unselect All</button>
                     </div>
 
                     <div class="selection-toolbar">
