@@ -1039,7 +1039,7 @@ footer a:hover {
 }
 
 .cards .card strong {
-  display: block !important;
+  display: block! important;
   font-size: 32px !important;
   color: #111827 !important;
 }
