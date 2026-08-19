@@ -1,6 +1,7 @@
 /* =========================================================
-   CSS RESET & VARIABLES
+   GroupShare Manager 2027 - Complete Clean CSS
    ========================================================= */
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -29,7 +30,7 @@ body {
 }
 
 /* =========================================================
-   HEADER NAVBAR
+   TOP NAVBAR
    ========================================================= */
 .top-navbar {
     background: linear-gradient(135deg, #312e81, #4f46e5);
@@ -50,17 +51,18 @@ body {
     background: rgba(255, 255, 255, 0.15);
     color: white;
     border: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 6px 16px;
+    padding: 7px 16px;
     border-radius: 8px;
     cursor: pointer;
     font-weight: 600;
     font-family: inherit;
-    transition: 0.2s;
+    transition: all 0.2s ease;
 }
 
 .login-btn:hover {
     background: #ffffff;
     color: var(--primary);
+    transform: translateY(-1px);
 }
 
 /* =========================================================
@@ -199,7 +201,7 @@ body {
     font-size: 0.9rem;
     font-family: inherit;
     outline: none;
-    transition: 0.2s;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .form-group textarea {
@@ -210,7 +212,7 @@ body {
 .form-group input:focus,
 .form-group textarea:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
 }
 
 .form-btns {
@@ -219,38 +221,63 @@ body {
 }
 
 /* =========================================================
-   BUTTONS
+   INTERACTIVE BUTTONS & HOVER EFFECTS
    ========================================================= */
 .btn {
-    padding: 9px 14px;
+    padding: 10px 16px;
     border-radius: 8px;
     font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
     border: 1px solid transparent;
     font-family: inherit;
-    transition: 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn:active:not(:disabled) {
+    transform: scale(0.97);
+}
+
+/* Main Action Buttons (+ Add Group / Share All) */
+.btn-main, 
+#addGroupBtn {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: #ffffff;
+    box-shadow: 0 3px 8px rgba(79, 70, 229, 0.22);
 }
 
 .btn-main {
-    background: var(--primary);
-    color: white;
     flex: 1;
 }
 
-.btn-main:hover { background: var(--primary-hover); }
-
-.btn-clear {
-    background: #f1f5f9;
-    color: var(--text-gray);
-    border-color: var(--border-color);
+.btn-main:hover:not(:disabled),
+#addGroupBtn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #4338ca, #4f46e5);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35);
 }
 
-.btn-clear:hover { background: #e2e8f0; color: var(--text-dark); }
-
 .btn-sm {
-    padding: 6px 12px;
+    padding: 7px 14px;
     font-size: 0.8rem;
+}
+
+/* Clear Button */
+.btn-clear {
+    background: #f1f5f9;
+    color: #64748b;
+    border-color: #cbd5e1;
+}
+
+.btn-clear:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+    border-color: #94a3b8;
+    transform: translateY(-1px);
 }
 
 /* Tips Card */
@@ -270,9 +297,7 @@ body {
     line-height: 1.8;
 }
 
-/* =========================================================
-   GROUPS SECTION & ROWS
-   ========================================================= */
+/* Selection Toolbar Pills */
 .card-header-flex {
     display: flex;
     justify-content: space-between;
@@ -287,22 +312,28 @@ body {
 }
 
 .btn-pill {
-    background: #f8fafc;
-    border: 1px solid var(--border-color);
-    padding: 4px 10px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    padding: 6px 12px;
     border-radius: 6px;
     font-size: 0.75rem;
     cursor: pointer;
-    font-weight: 500;
-    transition: 0.2s;
+    font-weight: 600;
+    color: #475569;
+    transition: all 0.2s ease;
 }
 
 .btn-pill:hover {
-    background: #ede9fe;
-    color: var(--primary);
-    border-color: #c7d2fe;
+    background: #eef2ff;
+    color: #4f46e5;
+    border-color: #818cf8;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(79, 70, 229, 0.12);
 }
 
+/* =========================================================
+   GROUPS SECTION & ROWS
+   ========================================================= */
 .group-items-list {
     display: flex;
     flex-direction: column;
@@ -313,12 +344,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px;
+    padding: 12px 14px;
     border: 1px solid var(--border-color);
     border-radius: 8px;
     background: #ffffff;
     gap: 12px;
-    transition: 0.2s;
+    transition: border-color 0.2s ease;
 }
 
 .group-row:hover {
@@ -365,33 +396,90 @@ body {
     color: var(--warning);
 }
 
-/* =========================================================
-   ACTION BUTTONS
-   ========================================================= */
+/* Group Action Buttons with Distinct Hover Colors */
 .group-right-actions {
     display: flex;
-    gap: 4px;
+    gap: 5px;
     flex-shrink: 0;
 }
 
 .act-btn {
-    border: 1px solid var(--border-color);
-    background: #f8fafc;
-    padding: 4px 8px;
+    border: 1px solid transparent;
+    padding: 6px 11px;
     border-radius: 6px;
     font-size: 0.75rem;
     font-weight: 600;
     cursor: pointer;
-    color: var(--text-dark);
-    transition: 0.2s;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.act-btn:hover { background: #e2e8f0; }
-.act-btn.share { background: #ede9fe; color: var(--primary); border-color: #c7d2fe; }
-.act-btn.share:hover { background: #ddd6fe; }
-.act-btn.delete { color: var(--danger); background: #fee2e2; border-color: #fecdd3; }
-.act-btn.delete:hover { background: #fecdd3; }
-.act-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+/* 1. Open Button -> Sky Blue */
+.act-btn:not(.share):not(.delete):not(:nth-child(3)) {
+    background: #f1f5f9;
+    color: #334155;
+    border-color: #e2e8f0;
+}
+
+.act-btn:not(.share):not(.delete):not(:nth-child(3)):hover:not(:disabled) {
+    background: #0284c7;
+    color: #ffffff;
+    border-color: #0284c7;
+    transform: translateY(-1.5px);
+    box-shadow: 0 4px 10px rgba(2, 132, 199, 0.25);
+}
+
+/* 2. Share Button -> Indigo/Purple */
+.act-btn.share {
+    background: #eef2ff;
+    color: #4f46e5;
+    border-color: #c7d2fe;
+}
+
+.act-btn.share:hover:not(:disabled) {
+    background: #4f46e5;
+    color: #ffffff;
+    border-color: #4f46e5;
+    transform: translateY(-1.5px);
+    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25);
+}
+
+/* 3. Edit Button -> Amber/Orange */
+.act-btn:nth-child(3) {
+    background: #fffbeb;
+    color: #d97706;
+    border-color: #fde68a;
+}
+
+.act-btn:nth-child(3):hover:not(:disabled) {
+    background: #d97706;
+    color: #ffffff;
+    border-color: #d97706;
+    transform: translateY(-1.5px);
+    box-shadow: 0 4px 10px rgba(217, 119, 6, 0.25);
+}
+
+/* 4. Delete Button -> Red */
+.act-btn.delete {
+    background: #fef2f2;
+    color: #dc2626;
+    border-color: #fecaca;
+}
+
+.act-btn.delete:hover:not(:disabled) {
+    background: #dc2626;
+    color: #ffffff;
+    border-color: #dc2626;
+    transform: translateY(-1.5px);
+    box-shadow: 0 4px 10px rgba(220, 38, 38, 0.25);
+}
+
+.act-btn:disabled,
+.btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
 
 /* =========================================================
    HISTORY BOX & FOOTER
