@@ -1,14 +1,9 @@
 /* =========================================================
-   GroupShare Manager 2027 - Logic Controller (script.js)
-   ========================================================= */
-/* =========================================================
-   FACEBOOK SDK & LOGIN SETUP
+   FACEBOOK LOGIN SDK
    ========================================================= */
 
-// ១. កំណត់ Facebook App ID (ជំនួស YOUR_FACEBOOK_APP_ID ដោយ App ID ពិតរបស់អ្នក)
-const FB_APP_ID = 'YOUR_FACEBOOK_APP_ID'; 
+const FB_APP_ID = '2149167585663122'; 
 
-// ២. Load Facebook SDK ដោយស្វ័យប្រវត្តិ
 window.fbAsyncInit = function() {
     FB.init({
         appId      : FB_APP_ID,
@@ -17,7 +12,6 @@ window.fbAsyncInit = function() {
         version    : 'v19.0'
     });
 
-    // ពិនិត្យមើលថាតើ User ធ្លាប់ Login ហើយឬនៅ
     FB.getLoginStatus(function(response) {
         statusChangeCallback(response);
     });
@@ -31,39 +25,40 @@ window.fbAsyncInit = function() {
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
 
-// ៣. មុខងារពិនិត្យស្ថានភាព Login
 function statusChangeCallback(response) {
     const loginBtn = document.getElementById('loginBtn');
+    if (!loginBtn) return;
+
     if (response.status === 'connected') {
-        // ប្រសិនបើ Login ជោគជ័យ -> ទាញយកឈ្មោះ និងរូប Profile
         FB.api('/me', {fields: 'name,picture'}, function(user) {
             loginBtn.innerHTML = `
-                <img src="${user.picture.data.url}" style="width:22px; height:22px; border-radius:50%; vertical-align:middle; margin-right:5px;">
+                <img src="${user.picture.data.url}" style="width:20px; height:20px; border-radius:50%; vertical-align:middle; margin-right:6px;">
                 ${user.name} (ចាកចេញ)
             `;
             loginBtn.onclick = fbLogout;
         });
     } else {
-        // ប្រសិនបើមិនទាន់ Login
-        loginBtn.innerHTML = `<span>🔵</span> ចូលគណនី (Facebook Login)`;
+        loginBtn.innerHTML = `<span>🔵</span> ចូលគណនី (Login)`;
         loginBtn.onclick = fbLogin;
     }
 }
 
-// ៤. ដំណើរការ Login ពេលចុច
 function fbLogin() {
     FB.login(function(response) {
         statusChangeCallback(response);
     }, {scope: 'public_profile,email'});
 }
 
-// ៥. ដំណើរការ Logout
 function fbLogout() {
     FB.logout(function(response) {
         statusChangeCallback(response);
     });
 }
-// ១. ទិន្នន័យគំរូដើម (Initial Default Data)
+
+/* =========================================================
+   DASHBOARD LOGIC & CONTROLLER
+   ========================================================= */
+
 const initialGroups = [
     { id: 1, name: "Facebook Group 1", url: "https://web.facebook.com/groups/116079099082791", selected: true },
     { id: 2, name: "Facebook Group 2", url: "", selected: false },
@@ -80,11 +75,9 @@ const initialHistory = [
     }
 ];
 
-// ទាញទិន្នន័យពី LocalStorage ឬប្រើទិន្នន័យដើម
 let groups = JSON.parse(localStorage.getItem('gsm_groups')) || initialGroups;
 let histories = JSON.parse(localStorage.getItem('gsm_history')) || initialHistory;
 
-// ២. ចាប់យក Element ពី HTML
 const groupsList = document.getElementById('groupsList');
 const historyList = document.getElementById('historyList');
 const totalGroupsEl = document.getElementById('totalGroups');
@@ -98,22 +91,20 @@ const unselectAllBtn = document.getElementById('unselectAllBtn');
 const sharePostBtn = document.getElementById('sharePostBtn');
 const clearBtn = document.getElementById('clearBtn');
 
-// ៣. រក្សាទុកទិន្នន័យទៅ LocalStorage
 function saveData() {
     localStorage.setItem('gsm_groups', JSON.stringify(groups));
     localStorage.setItem('gsm_history', JSON.stringify(histories));
 }
 
-// ៤. ធ្វើបច្ចុប្បន្នភាពស្ថិតិ (Update Stats)
 function updateStats() {
-    totalGroupsEl.innerText = groups.length;
-    successCountEl.innerText = histories.filter(h => h.status === 'Posted').length;
+    if (totalGroupsEl) totalGroupsEl.innerText = groups.length;
+    if (successCountEl) successCountEl.innerText = histories.filter(h => h.status === 'Posted').length;
     const selectedCount = groups.filter(g => g.selected && g.url).length;
-    waitingCountEl.innerText = selectedCount;
+    if (waitingCountEl) waitingCountEl.innerText = selectedCount;
 }
 
-// ៥. បង្ហាញបញ្ជី Groups (Render Groups)
 function renderGroups() {
+    if (!groupsList) return;
     groupsList.innerHTML = '';
 
     if (groups.length === 0) {
@@ -122,7 +113,7 @@ function renderGroups() {
         return;
     }
 
-    groups.forEach((group, index) => {
+    groups.forEach((group) => {
         const row = document.createElement('div');
         row.className = 'group-row';
 
@@ -140,10 +131,10 @@ function renderGroups() {
                 </div>
             </div>
             <div class="group-right-actions">
-                <button class="act-btn" onclick="openLink('${group.url}')" ${!hasUrl ? 'disabled' : ''}>Open</button>
-                <button class="act-btn share" onclick="shareSingle(${group.id})" ${!hasUrl ? 'disabled' : ''}>Share</button>
-                <button class="act-btn" onclick="editGroup(${group.id})">Edit</button>
-                <button class="act-btn delete" onclick="deleteGroup(${group.id})">Delete</button>
+                <button type="button" class="act-btn" onclick="openLink('${group.url}')" ${!hasUrl ? 'disabled' : ''}>Open</button>
+                <button type="button" class="act-btn share" onclick="shareSingle(${group.id})" ${!hasUrl ? 'disabled' : ''}>Share</button>
+                <button type="button" class="act-btn" onclick="editGroup(${group.id})">Edit</button>
+                <button type="button" class="act-btn delete" onclick="deleteGroup(${group.id})">Delete</button>
             </div>
         `;
         groupsList.appendChild(row);
@@ -152,8 +143,8 @@ function renderGroups() {
     updateStats();
 }
 
-// ៦. បង្ហាញប្រវត្តិ (Render History)
 function renderHistory() {
+    if (!historyList) return;
     historyList.innerHTML = '';
 
     if (histories.length === 0) {
@@ -177,25 +168,25 @@ function renderHistory() {
     });
 }
 
-// ៧. មុខងារបន្ថែម Group ថ្មី (Add Group)
-addGroupBtn.addEventListener('click', () => {
-    const name = prompt("បញ្ចូលឈ្មោះ Group របស់អ្នក:");
-    if (!name || name.trim() === '') return;
+if (addGroupBtn) {
+    addGroupBtn.addEventListener('click', () => {
+        const name = prompt("បញ្ចូលឈ្មោះ Group របស់អ្នក:");
+        if (!name || name.trim() === '') return;
 
-    const url = prompt("បញ្ចូល Link របស់ Facebook Group (URL):");
-    const newGroup = {
-        id: Date.now(),
-        name: name.trim(),
-        url: url ? url.trim() : '',
-        selected: true
-    };
+        const url = prompt("បញ្ចូល Link របស់ Facebook Group (URL):");
+        const newGroup = {
+            id: Date.now(),
+            name: name.trim(),
+            url: url ? url.trim() : '',
+            selected: true
+        };
 
-    groups.push(newGroup);
-    saveData();
-    renderGroups();
-});
+        groups.push(newGroup);
+        saveData();
+        renderGroups();
+    });
+}
 
-// ៨. មុខងារកែប្រែ Group (Edit)
 window.editGroup = function(id) {
     const group = groups.find(g => g.id === id);
     if (!group) return;
@@ -212,7 +203,6 @@ window.editGroup = function(id) {
     renderGroups();
 };
 
-// ៩. មុខងារលុប Group (Delete)
 window.deleteGroup = function(id) {
     if (confirm("តើអ្នកពិតជាចង់លុប Group នេះមែនទេ?")) {
         groups = groups.filter(g => g.id !== id);
@@ -221,7 +211,6 @@ window.deleteGroup = function(id) {
     }
 };
 
-// ១០. មុខងារធីកជ្រើសរើស (Checkbox)
 window.toggleSelect = function(id) {
     const group = groups.find(g => g.id === id);
     if (group) {
@@ -231,66 +220,65 @@ window.toggleSelect = function(id) {
     }
 };
 
-// ១១. មុខងារ Select All / Unselect All
-selectAllBtn.addEventListener('click', () => {
-    groups.forEach(g => g.selected = true);
-    saveData();
-    renderGroups();
-});
+if (selectAllBtn) {
+    selectAllBtn.addEventListener('click', () => {
+        groups.forEach(g => g.selected = true);
+        saveData();
+        renderGroups();
+    });
+}
 
-unselectAllBtn.addEventListener('click', () => {
-    groups.forEach(g => g.selected = false);
-    saveData();
-    renderGroups();
-});
+if (unselectAllBtn) {
+    unselectAllBtn.addEventListener('click', () => {
+        groups.forEach(g => g.selected = false);
+        saveData();
+        renderGroups();
+    });
+}
 
-// ១២. បើក Link Group
 window.openLink = function(url) {
     if (url) window.open(url, '_blank');
 };
 
-// ១៣. មុខងារ Share ទៅកាន់ Group តែមួយ
 window.shareSingle = function(id) {
     const group = groups.find(g => g.id === id);
-    const caption = captionInput.value.trim() || "Post Update";
-    const postUrl = postUrlInput.value.trim();
+    const caption = captionInput ? captionInput.value.trim() : "";
+    const postUrl = postUrlInput ? postUrlInput.value.trim() : "";
 
     if (!group || !group.url) {
         alert("Group នេះមិនទាន់មាន Link ទេ!");
         return;
     }
 
-    // បើកផ្ទាំង Facebook Share Dialog ឬ Group URL
     const shareLink = postUrl 
         ? `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`
         : group.url;
     
     window.open(shareLink, '_blank');
-
-    // កត់ត្រាចូល History
-    addHistoryRecord(group.url, caption);
+    addHistoryRecord(group.url, caption || "Post Update");
 };
 
-// ១៤. មុខងារ Share ទៅ Groups ទាំងអស់ដែលបានជ្រើស
-sharePostBtn.addEventListener('click', () => {
-    const selectedGroups = groups.filter(g => g.selected && g.url);
-    const caption = captionInput.value.trim() || "Post Update";
-    const postUrl = postUrlInput.value.trim();
+if (sharePostBtn) {
+    sharePostBtn.addEventListener('click', () => {
+        const selectedGroups = groups.filter(g => g.selected && g.url);
+        const caption = captionInput ? captionInput.value.trim() : "";
+        const postUrl = postUrlInput ? postUrlInput.value.trim() : "";
 
-    if (selectedGroups.length === 0) {
-        alert("សូមជ្រើសរើស Group យ៉ាងហោចណាស់មួយដែលមាន Link URL!");
-        return;
-    }
+        if (selectedGroups.length === 0) {
+            alert("សូមជ្រើសរើស Group យ៉ាងហោចណាស់មួយដែលមាន Link URL!");
+            return;
+        }
 
-    selectedGroups.forEach(group => {
-        const shareLink = postUrl 
-            ? `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`
-            : group.url;
+        selectedGroups.forEach(group => {
+            const shareLink = postUrl 
+                ? `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`
+                : group.url;
 
-        window.open(shareLink, '_blank');
-        addHistoryRecord(group.url, caption);
+            window.open(shareLink, '_blank');
+            addHistoryRecord(group.url, caption || "Post Update");
+        });
     });
-});
+}
 
 function addHistoryRecord(url, caption) {
     histories.push({
@@ -305,19 +293,18 @@ function addHistoryRecord(url, caption) {
     updateStats();
 }
 
-// ១៥. សម្អាត Input (Clear)
-clearBtn.addEventListener('click', () => {
-    captionInput.value = '';
-    postUrlInput.value = '';
-});
+if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+        if (captionInput) captionInput.value = '';
+        if (postUrlInput) postUrlInput.value = '';
+    });
+}
 
-// ការពារ XSS
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.innerText = text || '';
     return div.innerHTML;
 }
 
-// ចាប់ផ្ដើមដំណើរការដំបូងពេលបើក Page
 renderGroups();
 renderHistory();
