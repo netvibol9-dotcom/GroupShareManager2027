@@ -1085,3 +1085,79 @@ footer {
         flex: 1 !important;
     }
 }
+
+/* =========================================================
+   FINAL CARD + DASHBOARD UI FIX
+   ========================================================= */
+
+.cards {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 20px !important;
+    padding: 20px !important;
+    align-items: stretch !important;
+}
+
+.cards > .stat-card {
+    width: auto !important;
+    min-width: 0 !important;
+    min-height: 135px !important;
+
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+
+    padding: 24px !important;
+    margin: 0 !important;
+
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 16px !important;
+
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.07) !important;
+
+    box-sizing: border-box !important;
+}
+
+.cards > .stat-card .stat-icon {
+    flex: 0 0 58px !important;
+}
+
+.cards > .stat-card h3 {
+    margin: 0 0 7px 0 !important;
+    font-size: 14px !important;
+}
+
+.cards > .stat-card strong {
+    display: block !important;
+    font-size: 32px !important;
+    line-height: 1.1 !important;
+}
+
+/* Desktop */
+@media (min-width: 851px) {
+    .cards {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    }
+}
+
+/* Tablet */
+@media (max-width: 850px) {
+    .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .cards {
+        grid-template-columns: 1fr !important;
+        padding: 12px !important;
+    }
+
+    .cards > .stat-card {
+        min-height: 110px !important;
+        padding: 18px !important;
+    }
+}
