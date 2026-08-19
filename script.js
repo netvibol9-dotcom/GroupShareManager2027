@@ -45,7 +45,7 @@ function statusChangeCallback(response) {
 function fbLogin() {
     FB.login(function(response) {
         statusChangeCallback(response);
-    }, {scope: 'public_profile,email'});
+    }, {scope: 'public_profile'});
 }
 
 function fbLogout() {
