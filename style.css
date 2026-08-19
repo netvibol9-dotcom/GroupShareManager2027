@@ -592,3 +592,46 @@ footer {
     .group-right-actions { width: 100%; justify-content: flex-start; }
     .group-right-actions .act-btn { flex: 1; text-align: center; }
 }
+
+#importGroupsBtn {
+    background: #fff7ed;
+    color: #c2410c;
+    border: 1px solid #fed7aa;
+    font-weight: 600;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#importGroupsBtn:hover {
+    background: linear-gradient(135deg, #ea580c, #f97316);
+    color: #ffffff;
+    border-color: #ea580c;
+    transform: translateY(-1.5px);
+    box-shadow: 0 4px 12px rgba(234, 88, 12, 0.25);
+}
+
+#importGroupsBtn:active {
+    transform: scale(0.97);
+}
+
+/* =========================================================
+   CLEAR BUTTON (សម្អាត) - SOFT RED THEME
+   ========================================================= */
+.btn-clear {
+    background: #f8fafc;
+    color: #64748b;
+    border: 1px solid #cbd5e1;
+    font-weight: 600;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-clear:hover {
+    background: #fef2f2;
+    color: #dc2626;
+    border-color: #fca5a5;
+    transform: translateY(-1.5px);
+    box-shadow: 0 4px 10px rgba(220, 38, 38, 0.15);
+}
+
+.btn-clear:active {
+    transform: scale(0.97);
+}
