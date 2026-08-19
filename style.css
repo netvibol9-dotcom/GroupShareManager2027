@@ -1010,3 +1010,57 @@ footer a:hover {
     bottom: 15px;
   }
 }
+
+/* ===== FIX DASHBOARD STAT CARDS ===== */
+
+.cards {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 18px !important;
+  width: 100% !important;
+  margin-bottom: 25px !important;
+}
+
+.cards .card {
+  display: block !important;
+  width: 100% !important;
+  min-height: 130px !important;
+  padding: 22px !important;
+  background: #ffffff !important;
+  border-radius: 16px !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08) !important;
+}
+
+.cards .card h3 {
+  margin-bottom: 8px !important;
+  font-size: 15px !important;
+  color: #6b7280 !important;
+}
+
+.cards .card strong {
+  display: block !important;
+  font-size: 32px !important;
+  color: #111827 !important;
+}
+
+/* Desktop */
+@media (min-width: 851px) {
+  .cards {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+/* Tablet */
+@media (max-width: 850px) {
+  .cards {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .cards {
+    grid-template-columns: 1fr !important;
+  }
+}
