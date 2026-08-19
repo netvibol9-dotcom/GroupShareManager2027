@@ -865,3 +865,85 @@ footer {
 .history-section {
     animation: fadeUp 0.45s ease both;
 }
+
+/* =========================================================
+   FINAL DASHBOARD CARD FIX
+   ========================================================= */
+
+.cards,
+.stats,
+.stats-grid,
+.stat-cards,
+.dashboard-cards {
+    width: 100% !important;
+
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr)) !important;
+
+    gap: 20px !important;
+
+    align-items: stretch !important;
+}
+
+.cards > .stat-card,
+.stats > .stat-card,
+.stats-grid > .stat-card,
+.stat-cards > .stat-card,
+.dashboard-cards > .stat-card {
+    width: 100% !important;
+
+    min-width: 0 !important;
+
+    display: flex !important;
+
+    flex-direction: row !important;
+
+    align-items: center !important;
+}
+
+
+/* Desktop */
+@media (min-width: 851px) {
+
+    .cards,
+    .stats,
+    .stats-grid,
+    .stat-cards,
+    .dashboard-cards {
+        grid-template-columns:
+            repeat(3, 1fr) !important;
+    }
+
+}
+
+
+/* Tablet */
+@media (max-width: 850px) {
+
+    .cards,
+    .stats,
+    .stats-grid,
+    .stat-cards,
+    .dashboard-cards {
+        grid-template-columns:
+            repeat(2, 1fr) !important;
+    }
+
+}
+
+
+/* Mobile */
+@media (max-width: 600px) {
+
+    .cards,
+    .stats,
+    .stats-grid,
+    .stat-cards,
+    .dashboard-cards {
+        grid-template-columns:
+            1fr !important;
+    }
+
+}
