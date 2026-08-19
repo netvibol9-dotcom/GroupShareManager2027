@@ -1,92 +1,181 @@
-<div class="app">
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>GroupShare Manager 2027</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- Header -->
   <header class="header">
-    <div class="logo">GroupShare Manager2027</div>
-    <button class="login-btn" onclick="login()">Login</button>
+    <div class="logo">
+      <span class="logo-icon">G</span>
+      <div>
+        <strong>GroupShare Manager</strong>
+        <small>2027</small>
+      </div>
+    </div>
+
+    <button class="login-btn" onclick="login()">
+      🔐 Login
+    </button>
   </header>
 
+
+  <!-- Main -->
   <main class="container">
 
+    <!-- Welcome -->
     <section class="welcome">
-      <h1>Dashboard</h1>
-      <p>គ្រប់គ្រងការចែករំលែក Post របស់អ្នក</p>
+      <div>
+        <h1>Dashboard</h1>
+
+        <p>
+          សូមស្វាគមន៍មកកាន់
+          <strong>GroupShare Manager 2027</strong>
+        </p>
+
+        <p class="subtitle">
+          គ្រប់គ្រងការបង្ហោះ Post និងការចែករំលែកទៅកាន់ Groups
+          បានងាយស្រួល។
+        </p>
+      </div>
     </section>
 
-    <section class="cards">
 
-      <div class="card">
-        <h3>👥 Total Groups</h3>
-        <strong>0</strong>
+    <!-- Statistics -->
+    <section class="stats">
+
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div>
+          <span>Total Groups</span>
+          <strong id="totalGroups">0</strong>
+        </div>
       </div>
 
-      <div class="card">
-        <h3>📤 Posts Shared</h3>
-        <strong>0</strong>
+      <div class="stat-card">
+        <div class="stat-icon">📤</div>
+        <div>
+          <span>Posts Shared</span>
+          <strong id="postsShared">0</strong>
+        </div>
       </div>
 
-      <div class="card">
-        <h3>✅ Successful</h3>
-        <strong>0</strong>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div>
+          <span>Successful</span>
+          <strong id="successful">0</strong>
+        </div>
       </div>
 
     </section>
 
-    <section class="content">
 
-      <div class="box">
+    <!-- Create Post -->
+    <section class="panel">
 
+      <div class="panel-title">
         <h2>📝 Create Post</h2>
-
-        <label>Caption</label>
-
-        <textarea
-          id="caption"
-          placeholder="សរសេរ Caption របស់អ្នក..."
-        ></textarea>
-
-        <label>Post / Website URL</label>
-
-        <input
-          id="postUrl"
-          type="url"
-          placeholder="https://example.com"
-        >
-
-        <button class="share-btn" onclick="sharePost()">
-          📤 Share Post
-        </button>
-
+        <p>បង្កើត Post សម្រាប់ចែករំលែក</p>
       </div>
 
-      <div class="box">
+      <label>Caption</label>
 
+      <textarea
+        id="caption"
+        placeholder="សរសេរ Caption របស់អ្នកនៅទីនេះ..."
+      ></textarea>
+
+
+      <label>Post / Website URL</label>
+
+      <input
+        type="url"
+        id="postUrl"
+        placeholder="https://example.com"
+      >
+
+
+      <button class="share-btn" onclick="sharePost()">
+        📤 Share Post
+      </button>
+
+    </section>
+
+
+    <!-- Groups -->
+    <section class="panel">
+
+      <div class="panel-title">
         <h2>👥 Groups</h2>
+        <p>ជ្រើសរើស Groups ដែលអ្នកចង់ប្រើ</p>
+      </div>
+
+      <div class="groups">
 
         <div class="group">
-          <span>Group 1</span>
-          <button onclick="selectGroup(this)">Select</button>
+          <div>
+            <strong>Group 1</strong>
+            <small>Facebook Group</small>
+          </div>
+
+          <button onclick="selectGroup(this)">
+            Select
+          </button>
         </div>
 
-        <div class="group">
-          <span>Group 2</span>
-          <button onclick="selectGroup(this)">Select</button>
-        </div>
 
         <div class="group">
-          <span>Group 3</span>
-          <button onclick="selectGroup(this)">Select</button>
+          <div>
+            <strong>Group 2</strong>
+            <small>Facebook Group</small>
+          </div>
+
+          <button onclick="selectGroup(this)">
+            Select
+          </button>
+        </div>
+
+
+        <div class="group">
+          <div>
+            <strong>Group 3</strong>
+            <small>Facebook Group</small>
+          </div>
+
+          <button onclick="selectGroup(this)">
+            Select
+          </button>
         </div>
 
       </div>
 
     </section>
 
+
+    <!-- Notice -->
     <div class="notice">
-      ⚠️ Version 1 — Dashboard សម្រាប់សាកល្បង។
-      Meta Login និងមុខងារ Share នឹងភ្ជាប់នៅជំហានបន្ទាប់
-      តាមសិទ្ធិដែល Meta អនុញ្ញាត។
+      ⚠️ <strong>Version 1</strong> —
+      Dashboard សម្រាប់គ្រប់គ្រង Post និង Groups។
+      Meta Login នឹងត្រូវភ្ជាប់នៅជំហានបន្ទាប់។
     </div>
 
   </main>
 
-</div>
+
+  <footer>
+    © 2027 GroupShare Manager
+  </footer>
+
+
+  <script src="script.js"></script>
+
+</body>
+</html>
