@@ -27,21 +27,46 @@ window.fbAsyncInit = function() {
 function statusChangeCallback(response) {
     const loginBtn = document.getElementById('loginBtn');
     const logoutBtn = document.getElementById('logoutBtn');
-    if (!loginBtn) return;
+    const loginGateOverlay = document.getElementById('loginGateOverlay');
 
     if (response && response.status === 'connected') {
+        // 1. បិទផ្ទាំង Login Overlay ពេល Login ជោគជ័យ
+        if (loginGateOverlay) {
+            loginGateOverlay.style.display = 'none';
+        }
+
         FB.api('/me', {fields: 'name,picture'}, function(user) {
-            loginBtn.innerHTML = `
-                <img src="${user.picture.data.url}" style="width:22px; height:22px; border-radius:50%; vertical-align:middle; margin-right:6px;">
-                ${user.name}
-            `;
-            loginBtn.onclick = null;
-            loginBtn.style.cursor = 'default';
+            if (loginBtn) {
+                loginBtn.innerHTML = `
+                    <img src="${user.picture.data.url}" style="width:22px; height:22px; border-radius:50%; vertical-align:middle; margin-right:6px;">
+                    ${user.name}
+                `;
+                loginBtn.onclick = null;
+                loginBtn.style.cursor = 'default';
+            }
 
             if (logoutBtn) {
                 logoutBtn.style.display = 'inline-flex';
                 logoutBtn.onclick = fbLogout;
             }
+        });
+    } else {
+        // 2. បើកផ្ទាំង Login Overlay វិញពេលមិនទាន់ Login ឬ Logout
+        if (loginGateOverlay) {
+            loginGateOverlay.style.display = 'flex';
+        }
+
+        if (loginBtn) {
+            loginBtn.innerHTML = `<span>🔵</span> ចូលគណនី (Login)`;
+            loginBtn.onclick = fbLogin;
+            loginBtn.style.cursor = 'pointer';
+        }
+
+        if (logoutBtn) {
+            logoutBtn.style.display = 'none';
+        }
+    }
+}
         });
     } else {
         loginBtn.innerHTML = `<span>🔵</span> ចូលគណនី (Login)`;
