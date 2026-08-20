@@ -157,9 +157,13 @@ function renderHistory() {
         box.className = 'history-box';
         box.style.marginBottom = '10px';
         box.innerHTML = `
-            <div class="history-header">
-               <a href="${item.url}" target="_blank" style="color: #4f46e5; text-decoration: underline;">🔗 ${escapeHtml(item.url)}</a>
-                <span class="badge-posted">● ${escapeHtml(item.status)}</span>
+            <div class="history-header" style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+                <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">🔗 ${escapeHtml(item.url)}</span>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <button type="button" class="act-btn" onclick="openLink('${escapeHtml(item.url)}')" style="padding: 2px 8px; font-size: 11px;">Open</button>
+                    <span class="badge-posted">● ${escapeHtml(item.status)}</span>
+                </div>
+            </div>
             </div>
             <div class="history-desc">"${escapeHtml(item.caption)}"</div>
             <div class="history-date">📅 ${item.date}</div>
