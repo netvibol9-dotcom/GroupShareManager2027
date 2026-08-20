@@ -635,3 +635,70 @@ footer {
 .btn-clear:active {
     transform: scale(0.97);
 }
+
+/* =========================================================
+   MODERN FACEBOOK AUTH BUTTONS
+   ========================================================= */
+#authContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ប៊ូតុង Login (រចនាបថទំនើប Facebook Blue) */
+.btn-login {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #1877f2;
+    color: #ffffff !important;
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 7px 16px;
+    border-radius: 9999px; /* រាងមូលស្អាត */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 12px rgba(24, 119, 242, 0.25);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    backdrop-filter: blur(8px);
+}
+
+.btn-login:hover {
+    background: #166fe5;
+    transform: translateY(-1.5px);
+    box-shadow: 0 6px 16px rgba(24, 119, 242, 0.35);
+}
+
+.btn-login:active {
+    transform: scale(0.97);
+}
+
+/* ពេលបាន Login រួច (បង្ហាញឈ្មោះ និងរូប Profile) */
+.btn-login img {
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);
+}
+
+/* ប៊ូតុង Logout (រចនាបថ Soft Red Pill) */
+#logoutBtn {
+    background: #fff1f2;
+    color: #e11d48;
+    border: 1px solid #fecdd3;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#logoutBtn:hover {
+    background: #e11d48;
+    color: #ffffff;
+    border-color: #e11d48;
+    transform: translateY(-1.5px);
+    box-shadow: 0 4px 12px rgba(225, 29, 72, 0.25);
+}
+
+#logoutBtn:active {
+    transform: scale(0.97);
+}
