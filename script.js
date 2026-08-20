@@ -72,30 +72,6 @@ function fbLogout() {
     }
 }
 
-// ធានាថាប៊ូតុង Login ដំណើរការភ្លាមៗពេលទំព័រដើរចប់
-document.addEventListener('DOMContentLoaded', () => {
-    const loginBtn = document.getElementById('loginBtn');
-    if (loginBtn) {
-        loginBtn.onclick = fbLogin;
-    }
-});
-    } else {
-        loginBtn.innerHTML = `<span>🔵</span> ចូលគណនី (Login)`;
-        loginBtn.onclick = fbLogin;
-        loginBtn.style.cursor = 'pointer';
-
-        if (logoutBtn) {
-            logoutBtn.style.display = 'none';
-        }
-    }
-}
-
-function fbLogout() {
-    FB.logout(function(response) {
-        statusChangeCallback(response);
-    });
-}
-
 /* =========================================================
    DASHBOARD LOGIC & CONTROLLER
    ========================================================= */
@@ -206,15 +182,13 @@ function renderHistory() {
                     <span class="badge-posted">● ${escapeHtml(item.status)}</span>
                 </div>
             </div>
-            </div>
-            <div class="history-desc">"${escapeHtml(item.caption)}"</div>
-            <div class="history-date">📅 ${item.date}</div>
+            <div class="history-desc" style="margin-top: 6px;">"${escapeHtml(item.caption)}"</div>
+            <div class="history-date" style="margin-top: 4px;">📅 ${item.date}</div>
         `;
         historyList.appendChild(box);
     });
 }
 
-// បន្ថែម Group មួយៗ
 if (addGroupBtn) {
     addGroupBtn.addEventListener('click', () => {
         const name = prompt("បញ្ចូលឈ្មោះ Group របស់អ្នក:");
@@ -234,7 +208,6 @@ if (addGroupBtn) {
     });
 }
 
-// Import Groups ច្រើន
 if (importGroupsBtn) {
     importGroupsBtn.addEventListener('click', () => {
         const input = prompt(
@@ -398,6 +371,14 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// ដំណើរការ Render ដំបូងពេលបើក Page
+// ភ្ជាប់ Event ឱ្យប៊ូតុង Login ដំណើរការ
+document.addEventListener('DOMContentLoaded', () => {
+    const loginBtn = document.getElementById('loginBtn');
+    if (loginBtn) {
+        loginBtn.onclick = fbLogin;
+    }
+});
+
+// Render ដំបូងពេលបើក Page
 renderGroups();
 renderHistory();
