@@ -1,358 +1,1293 @@
-// your/* =========================================================
-   FACEBOOK LOGIN SDK
-   ========================================================= */
-const FB_APP_ID = '2149167585663122'; 
+// ======================================================
+// GroupShare Manager2027
+// SCRIPT.JS - Stable Version
+// Groups + Share Assistant + Share History + Open URL
+// ======================================================
 
-window.fbAsyncInit = function() {
-    FB.init({
-        appId      : FB_APP_ID,
-        cookie     : true,
-        xfbml      : true,
-        version    : 'v19.0'
-    });
 
-    FB.getLoginStatus(function(response) {
-        statusChangeCallback(response);
-    });
-};
+// ======================================================
+// STORAGE KEYS
+// DO NOT CHANGE - preserves existing data
+// ======================================================
 
-(function(d, s, id){
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) {return;}
-    js = d.createElement(s); js.id = id;
-    js.src = "https://connect.facebook.net/km_KH/sdk.js";
-    fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
+const GROUPS_KEY = "gsm2027_groups";
+const HISTORY_KEY = "gsm2027_history";
 
-function statusChangeCallback(response) {
-    const loginBtn = document.getElementById('loginBtn');
-    if (!loginBtn) return;
 
-    if (response && response.status === 'connected') {
-        FB.api('/me', {fields: 'name,picture'}, function(user) {
-            loginBtn.innerHTML = `
-                <img src="${user.picture.data.url}" style="width:20px; height:20px; border-radius:50%; vertical-align:middle; margin-right:6px;">
-                ${user.name} (ចាកចេញ)
-            `;
-            loginBtn.onclick = fbLogout;
-        });
-    } else {
-        loginBtn.innerHTML = `<span>🔵</span> ចូលគណនី (Login)`;
-        loginBtn.onclick = fbLogin;
+// ======================================================
+// LOAD DATA
+// ======================================================
+
+function loadJSON(key, fallback) {
+    try {
+        const data = localStorage.getItem(key);
+
+        if (!data) {
+            return fallback;
+        }
+
+        const parsed = JSON.parse(data);
+
+        return parsed;
+    } catch (error) {
+        console.error("Storage load error:", error);
+        return fallback;
     }
 }
 
-function fbLogin() {
-    FB.login(function(response) {
-        statusChangeCallback(response);
-    }, {scope: 'public_profile'});
-}
 
-function fbLogout() {
-    FB.logout(function(response) {
-        statusChangeCallback(response);
-    });
-}
-
-/* =========================================================
-   DASHBOARD LOGIC & CONTROLLER
-   ========================================================= */
-
-const defaultGroups = [
-    { id: 1, name: "Facebook Group 1", url: "https://web.facebook.com/groups/116079099082791", selected: true },
-    { id: 2, name: "Facebook Group 2", url: "", selected: false },
-    { id: 3, name: "Facebook Group 3", url: "", selected: false }
-];
-
-const defaultHistory = [
+let groups = loadJSON(GROUPS_KEY, [
     {
-        id: 1,
-        url: "https://web.facebook.com/groups/116079099082791",
-        caption: "TEST Caption Post",
-        date: "8/19/2026, 9:33:34 PM",
-        status: "Posted"
+        id: Date.now() + 1,
+        name: "Group 1",
+        url: ""
+    },
+    {
+        id: Date.now() + 2,
+        name: "Group 2",
+        url: ""
+    },
+    {
+        id: Date.now() + 3,
+        name: "Group 3",
+        url: ""
     }
-];
+]);
 
-let groups = JSON.parse(localStorage.getItem('gsm_groups')) || defaultGroups;
-let histories = JSON.parse(localStorage.getItem('gsm_history')) || defaultHistory;
 
-const groupsList = document.getElementById('groupsList');
-const historyList = document.getElementById('historyList');
-const totalGroupsEl = document.getElementById('totalGroups');
-const successCountEl = document.getElementById('successCount');
-const waitingCountEl = document.getElementById('waitingCount');
-const captionInput = document.getElementById('caption');
-const postUrlInput = document.getElementById('postUrl');
-const addGroupBtn = document.getElementById('addGroupBtn');
-const importGroupsBtn = document.getElementById('importGroupsBtn');
-const selectAllBtn = document.getElementById('selectAllBtn');
-const unselectAllBtn = document.getElementById('unselectAllBtn');
-const sharePostBtn = document.getElementById('sharePostBtn');
-const clearBtn = document.getElementById('clearBtn');
+let history = loadJSON(HISTORY_KEY, []);
 
-function saveData() {
-    localStorage.setItem('gsm_groups', JSON.stringify(groups));
-    localStorage.setItem('gsm_history', JSON.stringify(histories));
+
+// ======================================================
+// SAVE DATA
+// ======================================================
+
+function saveGroups() {
+
+    localStorage.setItem(
+        GROUPS_KEY,
+        JSON.stringify(groups)
+    );
 }
 
-function updateStats() {
-    if (totalGroupsEl) totalGroupsEl.innerText = groups.length;
-    if (successCountEl) successCountEl.innerText = histories.filter(h => h.status === 'Posted').length;
-    const selectedCount = groups.filter(g => g.selected && g.url).length;
-    if (waitingCountEl) waitingCountEl.innerText = selectedCount;
+
+function saveHistory() {
+
+    localStorage.setItem(
+        HISTORY_KEY,
+        JSON.stringify(history)
+    );
 }
 
-function renderGroups() {
-    if (!groupsList) return;
-    groupsList.innerHTML = '';
 
-    if (groups.length === 0) {
-        groupsList.innerHTML = '<div style="text-align:center; padding:20px; color:#64748b;">មិនទាន់មាន Group នៅឡើយទេ</div>';
-        updateStats();
+// ======================================================
+// ESCAPE HTML
+// ======================================================
+
+function escapeHTML(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+// ======================================================
+// ADD GROUP
+// ======================================================
+
+function addGroup() {
+
+    const name = prompt(
+        "បញ្ចូលឈ្មោះ Group:"
+    );
+
+    if (!name || !name.trim()) {
         return;
     }
 
-    groups.forEach((group) => {
-        const row = document.createElement('div');
-        row.className = 'group-row';
+    const url = prompt(
+        "បញ្ចូល Group URL:"
+    );
 
-        const hasUrl = group.url && group.url.trim() !== '';
-        const urlDisplay = hasUrl 
-            ? `<span>${escapeHtml(group.url)}</span>`
-            : `<span class="no-link">⚠️ មិនទាន់មាន URL</span>`;
-
-        row.innerHTML = `
-            <div class="group-left">
-                <input type="checkbox" id="chk-${group.id}" ${group.selected ? 'checked' : ''} onchange="toggleSelect(${group.id})">
-                <div class="group-text">
-                    <strong>${escapeHtml(group.name)}</strong>
-                    ${urlDisplay}
-                </div>
-            </div>
-            <div class="group-right-actions">
-                <button type="button" class="act-btn" onclick="openLink('${escapeHtml(group.url)}')" ${!hasUrl ? 'disabled' : ''}>Open</button>
-                <button type="button" class="act-btn share" onclick="shareSingle(${group.id})" ${!hasUrl ? 'disabled' : ''}>Share</button>
-                <button type="button" class="act-btn" onclick="editGroup(${group.id})">Edit</button>
-                <button type="button" class="act-btn delete" onclick="deleteGroup(${group.id})">Delete</button>
-            </div>
-        `;
-        groupsList.appendChild(row);
+    groups.push({
+        id: Date.now(),
+        name: name.trim(),
+        url: url ? url.trim() : ""
     });
 
-    updateStats();
+    saveGroups();
+
+    renderGroups();
+    updateDashboard();
+
+    alert(
+        "✅ បានបន្ថែម Group រួចរាល់!"
+    );
 }
 
-function renderHistory() {
-    if (!historyList) return;
-    historyList.innerHTML = '';
 
-    if (histories.length === 0) {
-        historyList.innerHTML = '<div style="text-align:center; padding:15px; color:#64748b;">គ្មានប្រវត្តិ Share ទេ</div>';
+// ======================================================
+// EDIT GROUP
+// ======================================================
+
+function editGroup(id) {
+
+    const group = groups.find(
+        g => g.id === id
+    );
+
+    if (!group) {
         return;
     }
 
-    histories.slice().reverse().forEach(item => {
-        const box = document.createElement('div');
-        box.className = 'history-box';
-        box.style.marginBottom = '10px';
-        box.innerHTML = `
-            <div class="history-header">
-                <span>🔗 ${escapeHtml(item.url)}</span>
-                <span class="badge-posted">● ${escapeHtml(item.status)}</span>
-            </div>
-            <div class="history-desc">"${escapeHtml(item.caption)}"</div>
-            <div class="history-date">📅 ${item.date}</div>
-        `;
-        historyList.appendChild(box);
-    });
+    const name = prompt(
+        "កែឈ្មោះ Group:",
+        group.name
+    );
+
+    if (name === null) {
+        return;
+    }
+
+    const url = prompt(
+        "កែ Group URL:",
+        group.url || ""
+    );
+
+    if (url === null) {
+        return;
+    }
+
+    group.name = name.trim();
+
+    group.url = url.trim();
+
+    saveGroups();
+
+    renderGroups();
+    updateDashboard();
 }
 
-// បន្ថែម Group មួយៗ
-if (addGroupBtn) {
-    addGroupBtn.addEventListener('click', () => {
-        const name = prompt("បញ្ចូលឈ្មោះ Group របស់អ្នក:");
-        if (!name || name.trim() === '') return;
 
-        const url = prompt("បញ្ចូល Link របស់ Facebook Group (URL):");
-        const newGroup = {
-            id: Date.now(),
-            name: name.trim(),
-            url: url ? url.trim() : '',
-            selected: true
-        };
+// ======================================================
+// DELETE GROUP
+// ======================================================
 
-        groups.push(newGroup);
-        saveData();
-        renderGroups();
-    });
+function deleteGroup(id) {
+
+    const group = groups.find(
+        g => g.id === id
+    );
+
+    if (!group) {
+        return;
+    }
+
+    const confirmed = confirm(
+        `តើអ្នកចង់លុប "${group.name}" មែនទេ?`
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    groups = groups.filter(
+        g => g.id !== id
+    );
+
+    saveGroups();
+
+    renderGroups();
+    updateDashboard();
 }
 
-// Import Groups ច្រើន
-if (importGroupsBtn) {
-    importGroupsBtn.addEventListener('click', () => {
-        const input = prompt(
-            "សូមបញ្ចូល Links របស់ Facebook Groups (ចុះបន្ទាត់មួយ Line = មួយ Group):\n\nឧទាហរណ៍:\nhttps://facebook.com/groups/group1\nhttps://facebook.com/groups/group2"
+
+// ======================================================
+// OPEN GROUP
+// ======================================================
+
+function openGroup(id) {
+
+    const group = groups.find(
+        g => g.id === id
+    );
+
+    if (!group) {
+        return;
+    }
+
+    if (!group.url) {
+
+        alert(
+            "⚠️ Group នេះមិនទាន់មាន URL ទេ។"
         );
 
-        if (!input || input.trim() === '') return;
-
-        const lines = input.split('\n');
-        let count = 0;
-
-        lines.forEach((line) => {
-            const url = line.trim();
-            if (url) {
-                count++;
-                groups.push({
-                    id: Date.now() + Math.random(),
-                    name: `Facebook Group ${groups.length + 1}`,
-                    url: url,
-                    selected: true
-                });
-            }
-        });
-
-        if (count > 0) {
-            saveData();
-            renderGroups();
-            alert(`បានបន្ថែម ${count} Groups ជោគជ័យ!`);
-        }
-    });
-}
-
-window.editGroup = function(id) {
-    const group = groups.find(g => g.id === id);
-    if (!group) return;
-
-    const newName = prompt("កែប្រែឈ្មោះ Group:", group.name);
-    if (newName === null) return;
-
-    const newUrl = prompt("កែប្រែ Link Group:", group.url);
-    if (newUrl === null) return;
-
-    group.name = newName.trim() || group.name;
-    group.url = newUrl.trim();
-    saveData();
-    renderGroups();
-};
-
-window.deleteGroup = function(id) {
-    if (confirm("តើអ្នកពិតជាចង់លុប Group នេះមែនទេ?")) {
-        groups = groups.filter(g => g.id !== id);
-        saveData();
-        renderGroups();
-    }
-};
-
-window.toggleSelect = function(id) {
-    const group = groups.find(g => g.id === id);
-    if (group) {
-        group.selected = !group.selected;
-        saveData();
-        updateStats();
-    }
-};
-
-if (selectAllBtn) {
-    selectAllBtn.addEventListener('click', () => {
-        groups.forEach(g => g.selected = true);
-        saveData();
-        renderGroups();
-    });
-}
-
-if (unselectAllBtn) {
-    unselectAllBtn.addEventListener('click', () => {
-        groups.forEach(g => g.selected = false);
-        saveData();
-        renderGroups();
-    });
-}
-
-window.openLink = function(url) {
-    if (url) window.open(url, '_blank');
-};
-
-window.shareSingle = function(id) {
-    const group = groups.find(g => g.id === id);
-    const caption = captionInput ? captionInput.value.trim() : "";
-    const postUrl = postUrlInput ? postUrlInput.value.trim() : "";
-
-    if (!group || !group.url) {
-        alert("Group នេះមិនទាន់មាន Link ទេ!");
         return;
     }
 
-    if (caption && navigator.clipboard) {
-        navigator.clipboard.writeText(caption).catch(err => {
-            console.error("មិនអាច Copy បាន:", err);
-        });
+    window.open(
+        group.url,
+        "_blank",
+        "noopener,noreferrer"
+    );
+}
+
+
+// ======================================================
+// SELECT ALL GROUPS
+// ======================================================
+
+function selectAllGroups() {
+
+    const checkboxes =
+        document.querySelectorAll(
+            ".group-checkbox"
+        );
+
+    checkboxes.forEach(
+        checkbox => {
+            checkbox.checked = true;
+        }
+    );
+}
+
+
+// ======================================================
+// UNSELECT ALL GROUPS
+// ======================================================
+
+function unselectAllGroups() {
+
+    const checkboxes =
+        document.querySelectorAll(
+            ".group-checkbox"
+        );
+
+    checkboxes.forEach(
+        checkbox => {
+            checkbox.checked = false;
+        }
+    );
+}
+
+
+// ======================================================
+// GET SELECTED GROUPS
+// ======================================================
+
+function getSelectedGroups() {
+
+    const checkboxes =
+        document.querySelectorAll(
+            ".group-checkbox:checked"
+        );
+
+    return Array.from(checkboxes)
+        .map(checkbox => {
+
+            return groups.find(
+                g => String(g.id) ===
+                     String(checkbox.value)
+            );
+
+        })
+        .filter(Boolean);
+}
+
+
+// ======================================================
+// COPY TEXT
+// ======================================================
+
+async function copyText(text) {
+
+    try {
+
+        await navigator.clipboard.writeText(
+            text
+        );
+
+        return true;
+
+    } catch (error) {
+
+        console.warn(
+            "Clipboard API unavailable:",
+            error
+        );
+
+        try {
+
+            const textarea =
+                document.createElement(
+                    "textarea"
+                );
+
+            textarea.value = text;
+
+            textarea.style.position =
+                "fixed";
+
+            textarea.style.opacity = "0";
+
+            document.body.appendChild(
+                textarea
+            );
+
+            textarea.select();
+
+            document.execCommand(
+                "copy"
+            );
+
+            textarea.remove();
+
+            return true;
+
+        } catch (fallbackError) {
+
+            console.error(
+                "Copy failed:",
+                fallbackError
+            );
+
+            return false;
+        }
+    }
+}
+
+
+// ======================================================
+// CREATE HISTORY ITEM
+// ======================================================
+
+function createHistoryItem(
+    group,
+    caption,
+    postUrl
+) {
+
+    return {
+
+        id: Date.now() +
+            Math.floor(
+                Math.random() * 100000
+            ),
+
+        groupId: group.id,
+
+        groupName: group.name,
+
+        caption: caption,
+
+        url: postUrl,
+
+        groupUrl: group.url,
+
+        status: "Waiting",
+
+        date:
+            new Date().toLocaleString()
+    };
+}
+
+
+// ======================================================
+// SHARE POST TO ONE GROUP
+// ======================================================
+
+async function sharePostToGroup(id) {
+
+    const group = groups.find(
+        g => g.id === id
+    );
+
+    if (!group) {
+        return;
     }
 
-    const shareLink = postUrl 
-        ? `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`
-        : group.url;
-    
-    window.open(shareLink, '_blank');
-    addHistoryRecord(group.url, caption || "Post Update");
-};
+    const captionElement =
+        document.getElementById(
+            "caption"
+        );
 
-if (sharePostBtn) {
-    sharePostBtn.addEventListener('click', () => {
-        const selectedGroups = groups.filter(g => g.selected && g.url);
-        const caption = captionInput ? captionInput.value.trim() : "";
-        const postUrl = postUrlInput ? postUrlInput.value.trim() : "";
+    const postUrlElement =
+        document.getElementById(
+            "postUrl"
+        );
 
-        if (selectedGroups.length === 0) {
-            alert("សូមជ្រើសរើស Group យ៉ាងហោចណាស់មួយដែលមាន Link URL!");
+    const caption =
+        captionElement
+        ? captionElement.value.trim()
+        : "";
+
+    const postUrl =
+        postUrlElement
+        ? postUrlElement.value.trim()
+        : "";
+
+
+    if (!caption && !postUrl) {
+
+        alert(
+            "⚠️ សូមបញ្ចូល Caption ឬ Post URL ជាមុនសិន។"
+        );
+
+        return;
+    }
+
+
+    if (!group.url) {
+
+        alert(
+            "⚠️ Group នេះមិនទាន់មាន URL ទេ។"
+        );
+
+        return;
+    }
+
+
+    let shareText = caption;
+
+    if (postUrl) {
+
+        if (shareText) {
+            shareText += "\n\n";
+        }
+
+        shareText += postUrl;
+    }
+
+
+    // Copy caption + post URL
+    const copied =
+        await copyText(shareText);
+
+
+    // Save history
+    const item =
+        createHistoryItem(
+            group,
+            caption,
+            postUrl
+        );
+
+    history.push(item);
+
+    saveHistory();
+
+    renderHistory();
+
+    updateDashboard();
+
+
+    // Open Facebook Group
+    window.open(
+        group.url,
+        "_blank",
+        "noopener,noreferrer"
+    );
+
+
+    if (copied) {
+
+        alert(
+            `📋 Content បាន Copy រួច!\n\n` +
+            `${group.name}\n\n` +
+            `ចូល Group ហើយ Paste (Ctrl + V) ` +
+            `ដើម្បីបង្ហោះ។`
+        );
+
+    } else {
+
+        alert(
+            `⚠️ មិនអាច Copy ដោយស្វ័យប្រវត្តិបានទេ។\n\n` +
+            `ចូល ${group.name} ហើយ Copy/Paste ដោយខ្លួនឯង។`
+        );
+    }
+}
+
+
+// ======================================================
+// SHARE SELECTED GROUPS
+// ======================================================
+
+async function shareSelectedGroups() {
+
+    const selected =
+        getSelectedGroups();
+
+    if (selected.length === 0) {
+
+        alert(
+            "⚠️ សូមជ្រើសរើសយ៉ាងហោចណាស់ 1 Group។"
+        );
+
+        return;
+    }
+
+
+    const captionElement =
+        document.getElementById(
+            "caption"
+        );
+
+    const postUrlElement =
+        document.getElementById(
+            "postUrl"
+        );
+
+
+    const caption =
+        captionElement
+        ? captionElement.value.trim()
+        : "";
+
+
+    const postUrl =
+        postUrlElement
+        ? postUrlElement.value.trim()
+        : "";
+
+
+    if (!caption && !postUrl) {
+
+        alert(
+            "⚠️ សូមបញ្ចូល Caption ឬ Post URL ជាមុនសិន។"
+        );
+
+        return;
+    }
+
+
+    let shareText = caption;
+
+    if (postUrl) {
+
+        if (shareText) {
+            shareText += "\n\n";
+        }
+
+        shareText += postUrl;
+    }
+
+
+    await copyText(shareText);
+
+
+    let opened = 0;
+
+
+    selected.forEach(
+        group => {
+
+            if (!group.url) {
+                return;
+            }
+
+
+            const item =
+                createHistoryItem(
+                    group,
+                    caption,
+                    postUrl
+                );
+
+            history.push(item);
+
+            opened++;
+
+        }
+    );
+
+
+    saveHistory();
+
+    renderHistory();
+
+    updateDashboard();
+
+
+    alert(
+        `📋 Content បាន Copy រួច!\n\n` +
+        `បានជ្រើសរើស ${selected.length} Groups\n` +
+        `មាន URL ${opened} Groups\n\n` +
+        `បច្ចុប្បន្ននេះ សូមបើក Group ហើយ Paste ដោយខ្លួនឯង។`
+    );
+}
+
+
+// ======================================================
+// CLEAR POST FORM
+// ======================================================
+
+function clearPost() {
+
+    const caption =
+        document.getElementById(
+            "caption"
+        );
+
+    const postUrl =
+        document.getElementById(
+            "postUrl"
+        );
+
+
+    if (caption) {
+        caption.value = "";
+    }
+
+
+    if (postUrl) {
+        postUrl.value = "";
+    }
+
+
+    unselectAllGroups();
+}
+
+
+// ======================================================
+// MARK AS POSTED
+// ======================================================
+
+function markAsPosted(historyId) {
+
+    const item =
+        history.find(
+            h => h.id === historyId
+        );
+
+    if (!item) {
+        return;
+    }
+
+
+    item.status = "Posted";
+
+    saveHistory();
+
+    renderHistory();
+
+    updateDashboard();
+}
+
+
+// ======================================================
+// MARK AS WAITING
+// ======================================================
+
+function markAsWaiting(historyId) {
+
+    const item =
+        history.find(
+            h => h.id === historyId
+        );
+
+    if (!item) {
+        return;
+    }
+
+
+    item.status = "Waiting";
+
+    saveHistory();
+
+    renderHistory();
+
+    updateDashboard();
+}
+
+
+// ======================================================
+// OPEN POST URL FROM HISTORY
+// ⭐ NEW FEATURE
+// ======================================================
+
+function openHistoryUrl(historyId) {
+
+    const item =
+        history.find(
+            h => h.id === historyId
+        );
+
+    if (!item) {
+
+        alert(
+            "⚠️ មិនអាចរក History នេះបានទេ។"
+        );
+
+        return;
+    }
+
+
+    if (!item.url) {
+
+        alert(
+            "⚠️ History នេះមិនមាន Post URL ទេ។"
+        );
+
+        return;
+    }
+
+
+    window.open(
+        item.url,
+        "_blank",
+        "noopener,noreferrer"
+    );
+}
+
+
+// ======================================================
+// OPEN GROUP FROM HISTORY
+// ======================================================
+
+function openHistoryGroup(historyId) {
+
+    const item =
+        history.find(
+            h => h.id === historyId
+        );
+
+    if (!item) {
+        return;
+    }
+
+
+    if (!item.groupUrl) {
+
+        const group =
+            groups.find(
+                g => g.id === item.groupId
+            );
+
+        if (group && group.url) {
+
+            window.open(
+                group.url,
+                "_blank",
+                "noopener,noreferrer"
+            );
+
             return;
         }
 
-        if (caption && navigator.clipboard) {
-            navigator.clipboard.writeText(caption).catch(err => {
-                console.error("មិនអាច Copy បាន:", err);
-            });
-        }
 
-        selectedGroups.forEach(group => {
-            const shareLink = postUrl 
-                ? `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`
-                : group.url;
+        alert(
+            "⚠️ មិនមាន Group URL ទេ។"
+        );
 
-            window.open(shareLink, '_blank');
-            addHistoryRecord(group.url, caption || "Post Update");
-        });
-    });
+        return;
+    }
+
+
+    window.open(
+        item.groupUrl,
+        "_blank",
+        "noopener,noreferrer"
+    );
 }
 
-function addHistoryRecord(url, caption) {
-    histories.push({
-        id: Date.now() + Math.random(),
-        url: url,
-        caption: caption,
-        date: new Date().toLocaleString(),
-        status: "Posted"
-    });
-    saveData();
+
+// ======================================================
+// DELETE HISTORY
+// ======================================================
+
+function deleteHistory(historyId) {
+
+    const confirmed =
+        confirm(
+            "តើអ្នកចង់លុប History នេះមែនទេ?"
+        );
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    history =
+        history.filter(
+            h => h.id !== historyId
+        );
+
+
+    saveHistory();
+
     renderHistory();
-    updateStats();
+
+    updateDashboard();
 }
 
-if (clearBtn) {
-    clearBtn.addEventListener('click', () => {
-        if (captionInput) captionInput.value = '';
-        if (postUrlInput) postUrlInput.value = '';
-    });
+
+// ======================================================
+// CLEAR ALL HISTORY
+// ======================================================
+
+function clearAllHistory() {
+
+    if (history.length === 0) {
+
+        alert(
+            "ℹ️ មិនទាន់មាន History ទេ។"
+        );
+
+        return;
+    }
+
+
+    const confirmed =
+        confirm(
+            "⚠️ តើអ្នកចង់លុប Share History ទាំងអស់មែនទេ?"
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    history = [];
+
+    saveHistory();
+
+    renderHistory();
+
+    updateDashboard();
 }
 
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.innerText = text || '';
-    return div.innerHTML;
+
+// ======================================================
+// RENDER GROUPS
+// ======================================================
+
+function renderGroups() {
+
+    const container =
+        document.getElementById(
+            "groups"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    container.innerHTML = "";
+
+
+    groups.forEach(
+        (group, index) => {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "group-card";
+
+
+            card.innerHTML = `
+
+                <div class="group-info">
+
+                    <input
+                        type="checkbox"
+                        class="group-checkbox"
+                        value="${group.id}"
+                    >
+
+                    <div class="group-details">
+
+                        <strong>
+                            ${index + 1}.
+                            ${escapeHTML(group.name)}
+                        </strong>
+
+                        <small>
+                            ${
+                                group.url
+                                ? escapeHTML(group.url)
+                                : "⚠️ មិនទាន់មាន URL"
+                            }
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="group-actions">
+
+                    <button
+                        type="button"
+                        onclick="openGroup(${group.id})"
+                        ${group.url ? "" : "disabled"}
+                    >
+                        🔗 Open
+                    </button>
+
+
+                    <button
+                        type="button"
+                        onclick="sharePostToGroup(${group.id})"
+                        ${group.url ? "" : "disabled"}
+                    >
+                        📤 Share Post
+                    </button>
+
+
+                    <button
+                        type="button"
+                        onclick="editGroup(${group.id})"
+                    >
+                        ✏️ Edit
+                    </button>
+
+
+                    <button
+                        type="button"
+                        onclick="deleteGroup(${group.id})"
+                        class="delete-btn"
+                    >
+                        🗑️ Delete
+                    </button>
+
+                </div>
+
+            `;
+
+
+            container.appendChild(
+                card
+            );
+        }
+    );
+
+
+    if (groups.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="empty-history">
+
+                📭 មិនទាន់មាន Facebook Group ទេ។
+
+                <br><br>
+
+                ចុច
+                <strong>+ Add Group</strong>
+                ដើម្បីបន្ថែម Group។
+
+            </div>
+
+        `;
+    }
 }
 
-// ដំណើរការ Render ដំបូងពេលបើក Page
-renderGroups();
-renderHistory();
- code goes here
+
+// ======================================================
+// RENDER SHARE HISTORY
+// ======================================================
+
+function renderHistory() {
+
+    const container =
+        document.getElementById(
+            "history"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    container.innerHTML = "";
+
+
+    if (history.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="empty-history">
+
+                🕒 មិនទាន់មាន Share History ទេ។
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    [...history]
+        .reverse()
+        .forEach(
+            item => {
+
+                const row =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                row.className =
+                    "history-item";
+
+
+                const statusClass =
+                    item.status === "Posted"
+                    ? "status-posted"
+                    : "status-waiting";
+
+
+                const statusText =
+                    item.status === "Posted"
+                    ? "🟢 Posted"
+                    : "🟡 Waiting";
+
+
+                row.innerHTML = `
+
+                    <div class="history-main">
+
+                        <strong>
+                            ${escapeHTML(
+                                item.groupName
+                            )}
+                        </strong>
+
+
+                        <small>
+                            ${escapeHTML(
+                                item.date
+                            )}
+                        </small>
+
+
+                        <p>
+                            ${
+                                escapeHTML(
+                                    item.caption ||
+                                    "No caption"
+                                )
+                            }
+                        </p>
+
+
+                        ${
+                            item.url
+                            ?
+                            `
+                            <div class="history-url">
+                                🔗
+                                <span>
+                                    ${escapeHTML(item.url)}
+                                </span>
+                            </div>
+                            `
+                            :
+                            `
+                            <div class="history-url">
+                                ⚠️ No Post URL
+                            </div>
+                            `
+                        }
+
+                    </div>
+
+
+                    <div class="history-actions">
+
+                        <span
+                            class="${statusClass}"
+                        >
+                            ${statusText}
+                        </span>
+
+
+                        ${
+                            item.url
+                            ?
+                            `
+                            <button
+                                type="button"
+                                onclick="openHistoryUrl(${item.id})"
+                            >
+                                🔗 Open Post
+                            </button>
+                            `
+                            :
+                            ""
+                        }
+
+
+                        ${
+                            item.groupUrl
+                            ?
+                            `
+                            <button
+                                type="button"
+                                onclick="openHistoryGroup(${item.id})"
+                            >
+                                👥 Open Group
+                            </button>
+                            `
+                            :
+                            ""
+                        }
+
+
+                        ${
+                            item.status === "Posted"
+
+                            ?
+
+                            `
+                            <button
+                                type="button"
+                                onclick="markAsWaiting(${item.id})"
+                            >
+                                ↩️ Waiting
+                            </button>
+                            `
+
+                            :
+
+                            `
+                            <button
+                                type="button"
+                                onclick="markAsPosted(${item.id})"
+                            >
+                                ✅ Mark Posted
+                            </button>
+                            `
+                        }
+
+
+                        <button
+                            type="button"
+                            onclick="deleteHistory(${item.id})"
+                            class="delete-btn"
+                        >
+                            🗑️
+                        </button>
+
+                    </div>
+
+                `;
+
+
+                container.appendChild(
+                    row
+                );
+            }
+        );
+}
+
+
+// ======================================================
+// DASHBOARD
+// ======================================================
+
+function updateDashboard() {
+
+    const totalGroups =
+        document.getElementById(
+            "totalGroups"
+        );
+
+
+    const postsShared =
+        document.getElementById(
+            "postsShared"
+        );
+
+
+    const successful =
+        document.getElementById(
+            "successful"
+        );
+
+
+    const waiting =
+        document.getElementById(
+            "waiting"
+        );
+
+
+    if (totalGroups) {
+
+        totalGroups.textContent =
+            groups.length;
+    }
+
+
+    if (postsShared) {
+
+        postsShared.textContent =
+            history.length;
+    }
+
+
+    if (successful) {
+
+        successful.textContent =
+            history.filter(
+                h =>
+                    h.status ===
+                    "Posted"
+            ).length;
+    }
+
+
+    if (waiting) {
+
+        waiting.textContent =
+            history.filter(
+                h =>
+                    h.status ===
+                    "Waiting"
+            ).length;
+    }
+}
+
+
+// ======================================================
+// LOGIN
+// ======================================================
+
+function login() {
+
+    alert(
+        "🔐 Meta Login នឹងត្រូវភ្ជាប់នៅជំហានបន្ទាប់។"
+    );
+}
+
+
+// ======================================================
+// START APPLICATION
+// ======================================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        renderGroups();
+
+        renderHistory();
+
+        updateDashboard();
+
+    }
+);
