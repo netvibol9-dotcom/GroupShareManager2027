@@ -26,26 +26,32 @@ window.fbAsyncInit = function() {
 
 function statusChangeCallback(response) {
     const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
     if (!loginBtn) return;
 
     if (response && response.status === 'connected') {
         FB.api('/me', {fields: 'name,picture'}, function(user) {
             loginBtn.innerHTML = `
-                <img src="${user.picture.data.url}" style="width:20px; height:20px; border-radius:50%; vertical-align:middle; margin-right:6px;">
-                ${user.name} (ចាកចេញ)
+                <img src="${user.picture.data.url}" style="width:22px; height:22px; border-radius:50%; vertical-align:middle; margin-right:6px;">
+                ${user.name}
             `;
-            loginBtn.onclick = fbLogout;
+            loginBtn.onclick = null;
+            loginBtn.style.cursor = 'default';
+
+            if (logoutBtn) {
+                logoutBtn.style.display = 'inline-flex';
+                logoutBtn.onclick = fbLogout;
+            }
         });
     } else {
         loginBtn.innerHTML = `<span>🔵</span> ចូលគណនី (Login)`;
         loginBtn.onclick = fbLogin;
-    }
-}
+        loginBtn.style.cursor = 'pointer';
 
-function fbLogin() {
-    FB.login(function(response) {
-        statusChangeCallback(response);
-    }, {scope: 'public_profile'});
+        if (logoutBtn) {
+            logoutBtn.style.display = 'none';
+        }
+    }
 }
 
 function fbLogout() {
