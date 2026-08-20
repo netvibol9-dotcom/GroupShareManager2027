@@ -79,7 +79,7 @@ function statusChangeCallback(response) {
     }
 }
 
-function fbLogin() {
+window.fbLogin = function() {
     if (typeof FB === 'undefined') {
         alert("កំពុងភ្ជាប់ទៅកាន់ Facebook... សូមរង់ចាំ ២ វិនាទី រួចចុចម្តងទៀត!");
         return;
@@ -87,15 +87,24 @@ function fbLogin() {
     FB.login(function(response) {
         statusChangeCallback(response);
     }, {scope: 'public_profile'});
-}
+};
 
-function fbLogout() {
+window.fbLogout = function() {
     if (typeof FB !== 'undefined') {
         FB.logout(function(response) {
             statusChangeCallback(response);
         });
     }
-}
+};
+
+// ភ្ជាប់ Event ទៅប៊ូតុងទាំងពីរពេលទំព័រ Load ចប់
+document.addEventListener('DOMContentLoaded', () => {
+    const loginBtn = document.getElementById('loginBtn');
+    const btnFbOverlay = document.getElementById('btnFbOverlay');
+
+    if (loginBtn) loginBtn.onclick = window.fbLogin;
+    if (btnFbOverlay) btnFbOverlay.onclick = window.fbLogin;
+});
 
 /* =========================================================
    DASHBOARD LOGIC & CONTROLLER
