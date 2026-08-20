@@ -1,3 +1,85 @@
+
+/* =========================================================
+   FACEBOOK LOGIN SDK (Fixed & Direct Trigger)
+   ========================================================= */
+const FB_APP_ID = '2149167585663122'; 
+
+window.fbAsyncInit = function() {
+    FB.init({
+        appId      : FB_APP_ID,
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v19.0'
+    });
+
+    FB.getLoginStatus(function(response) {
+        statusChangeCallback(response);
+    });
+};
+
+// ទាញយក SDK ពី Facebook
+(function(d, s, id){
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {return;}
+    js = d.createElement(s); js.id = id;
+    js.src = "https://connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+function statusChangeCallback(response) {
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const loginGateOverlay = document.getElementById('loginGateOverlay');
+
+    if (response && response.status === 'connected') {
+        if (loginGateOverlay) loginGateOverlay.style.display = 'none';
+
+        FB.api('/me', {fields: 'name,picture'}, function(user) {
+            if (loginBtn) {
+                loginBtn.innerHTML = `
+                    <img src="${user.picture.data.url}" style="width:22px; height:22px; border-radius:50%; vertical-align:middle; margin-right:6px;">
+                    ${user.name}
+                `;
+                loginBtn.onclick = null;
+            }
+
+            if (logoutBtn) {
+                logoutBtn.style.display = 'inline-flex';
+                logoutBtn.onclick = window.fbLogout;
+            }
+        });
+    } else {
+        if (loginGateOverlay) loginGateOverlay.style.display = 'flex';
+
+        if (loginBtn) {
+            loginBtn.innerHTML = `<span>🔵</span> ចូលគណនី (Login)`;
+            loginBtn.onclick = window.fbLogin;
+        }
+
+        if (logoutBtn) {
+            logoutBtn.style.display = 'none';
+        }
+    }
+}
+
+window.fbLogin = function() {
+    if (typeof FB === 'undefined') {
+        alert("Facebook SDK មិនទាន់ដំណើរការចប់ទេ! សូមរង់ចាំ ២ វិនាទី ឬពិនិត្យមើល Internet រួចចុចម្តងទៀត។");
+        return;
+    }
+    
+    FB.login(function(response) {
+        statusChangeCallback(response);
+    }, {scope: 'public_profile'});
+};
+
+window.fbLogout = function() {
+    if (typeof FB !== 'undefined') {
+        FB.logout(function(response) {
+            statusChangeCallback(response);
+        });
+    }
+};
 /* =========================================================
    FACEBOOK LOGIN SDK
    ========================================================= */
