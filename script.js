@@ -54,6 +54,42 @@ function statusChangeCallback(response) {
     }
 }
 
+function fbLogin() {
+    if (typeof FB === 'undefined') {
+        alert("កំពុងភ្ជាប់ទៅកាន់ Facebook... សូមរង់ចាំ ២ វិនាទី រួចចុចម្តងទៀត!");
+        return;
+    }
+    FB.login(function(response) {
+        statusChangeCallback(response);
+    }, {scope: 'public_profile'});
+}
+
+function fbLogout() {
+    if (typeof FB !== 'undefined') {
+        FB.logout(function(response) {
+            statusChangeCallback(response);
+        });
+    }
+}
+
+// ធានាថាប៊ូតុង Login ដំណើរការភ្លាមៗពេលទំព័រដើរចប់
+document.addEventListener('DOMContentLoaded', () => {
+    const loginBtn = document.getElementById('loginBtn');
+    if (loginBtn) {
+        loginBtn.onclick = fbLogin;
+    }
+});
+    } else {
+        loginBtn.innerHTML = `<span>🔵</span> ចូលគណនី (Login)`;
+        loginBtn.onclick = fbLogin;
+        loginBtn.style.cursor = 'pointer';
+
+        if (logoutBtn) {
+            logoutBtn.style.display = 'none';
+        }
+    }
+}
+
 function fbLogout() {
     FB.logout(function(response) {
         statusChangeCallback(response);
