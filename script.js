@@ -158,7 +158,7 @@ function renderHistory() {
         box.style.marginBottom = '10px';
         box.innerHTML = `
             <div class="history-header">
-                <span>🔗 ${escapeHtml(item.url)}</span>
+               <a href="${item.url}" target="_blank" style="color: #4f46e5; text-decoration: underline;">🔗 ${escapeHtml(item.url)}</a>
                 <span class="badge-posted">● ${escapeHtml(item.status)}</span>
             </div>
             <div class="history-desc">"${escapeHtml(item.caption)}"</div>
