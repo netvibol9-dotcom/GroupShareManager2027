@@ -1,247 +1,5 @@
-
 /* =========================================================
-   FACEBOOK LOGIN SDK (Fixed & Direct Trigger)
-   ========================================================= */
-const FB_APP_ID = '2149167585663122'; 
-
-window.fbAsyncInit = function() {
-    FB.init({
-        appId      : FB_APP_ID,
-        cookie     : true,
-        xfbml      : true,
-        version    : 'v19.0'
-    });
-
-    FB.getLoginStatus(function(response) {
-        statusChangeCallback(response);
-    });
-};
-
-// ទាញយក SDK ពី Facebook
-(function(d, s, id){
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) {return;}
-    js = d.createElement(s); js.id = id;
-    js.src = "https://connect.facebook.net/en_US/sdk.js";
-    fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
-
-function statusChangeCallback(response) {
-    const loginBtn = document.getElementById('loginBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const loginGateOverlay = document.getElementById('loginGateOverlay');
-
-    if (response && response.status === 'connected') {
-        if (loginGateOverlay) loginGateOverlay.style.display = 'none';
-
-        FB.api('/me', {fields: 'name,picture'}, function(user) {
-            if (loginBtn) {
-                loginBtn.innerHTML = `
-                    <img src="${user.picture.data.url}" style="width:22px; height:22px; border-radius:50%; vertical-align:middle; margin-right:6px;">
-                    ${user.name}
-                `;
-                loginBtn.onclick = null;
-            }
-
-            if (logoutBtn) {
-                logoutBtn.style.display = 'inline-flex';
-                logoutBtn.onclick = window.fbLogout;
-            }
-        });
-    } else {
-        if (loginGateOverlay) loginGateOverlay.style.display = 'flex';
-
-        if (loginBtn) {
-            loginBtn.innerHTML = `<span>🔵</span> ចូលគណនី (Login)`;
-            loginBtn.onclick = window.fbLogin;
-        }
-
-        if (logoutBtn) {
-            logoutBtn.style.display = 'none';
-        }
-    }
-}
-
-window.fbLogin = function() {
-    const userName = prompt("សូមបញ្ចូលឈ្មោះគណនីរបស់អ្នកដើម្បីចូលប្រើប្រាស់:", "Admin User");
-    if (!userName) return;
-
-    const fakeUser = {
-        name: userName,
-        picture: {
-            data: {
-                url: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-            }
-        }
-    };
-
-    const loginGateOverlay = document.getElementById('loginGateOverlay');
-    const loginBtn = document.getElementById('loginBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
-
-    // បិទផ្ទាំង Login Overlay
-    if (loginGateOverlay) loginGateOverlay.style.display = 'none';
-
-    // បង្ហាញ Profile លើ Navbar
-    if (loginBtn) {
-        loginBtn.innerHTML = `
-            <img src="${fakeUser.picture.data.url}" style="width:22px; height:22px; border-radius:50%; vertical-align:middle; margin-right:6px;">
-            ${fakeUser.name}
-        `;
-        loginBtn.onclick = null;
-    }
-
-    if (logoutBtn) {
-        logoutBtn.style.display = 'inline-flex';
-        logoutBtn.onclick = () => {
-            if (loginGateOverlay) loginGateOverlay.style.display = 'flex';
-            if (loginBtn) {
-                loginBtn.innerHTML = `<span>🔵</span> ចូលគណនី (Login)`;
-                loginBtn.onclick = window.fbLogin;
-            }
-            logoutBtn.style.display = 'none';
-        };
-    }
-};
-
-    const loginGateOverlay = document.getElementById('loginGateOverlay');
-    const loginBtn = document.getElementById('loginBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
-
-    // បិទផ្ទាំង Login Overlay
-    if (loginGateOverlay) loginGateOverlay.style.display = 'none';
-
-    // បង្ហាញ Profile លើ Navbar
-    if (loginBtn) {
-        loginBtn.innerHTML = `
-            <img src="${fakeUser.picture.data.url}" style="width:22px; height:22px; border-radius:50%; vertical-align:middle; margin-right:6px;">
-            ${fakeUser.name}
-        `;
-        loginBtn.onclick = null;
-    }
-
-    if (logoutBtn) {
-        logoutBtn.style.display = 'inline-flex';
-        logoutBtn.onclick = () => {
-            if (loginGateOverlay) loginGateOverlay.style.display = 'flex';
-            if (loginBtn) {
-                loginBtn.innerHTML = `<span>🔵</span> ចូលគណនី (Login)`;
-                loginBtn.onclick = window.fbLogin;
-            }
-            logoutBtn.style.display = 'none';
-        };
-    }
-};
-/* =========================================================
-   FACEBOOK LOGIN SDK
-   ========================================================= */
-const FB_APP_ID = '2149167585663122'; 
-
-window.fbAsyncInit = function() {
-    FB.init({
-        appId      : FB_APP_ID,
-        cookie     : true,
-        xfbml      : true,
-        version    : 'v19.0'
-    });
-
-    FB.getLoginStatus(function(response) {
-        statusChangeCallback(response);
-    });
-};
-
-(function(d, s, id){
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) {return;}
-    js = d.createElement(s); js.id = id;
-    js.src = "https://connect.facebook.net/km_KH/sdk.js";
-    fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
-
-function statusChangeCallback(response) {
-    const loginBtn = document.getElementById('loginBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const loginGateOverlay = document.getElementById('loginGateOverlay');
-
-    if (response && response.status === 'connected') {
-        // 1. បិទផ្ទាំង Login Overlay ពេល Login ជោគជ័យ
-        if (loginGateOverlay) {
-            loginGateOverlay.style.display = 'none';
-        }
-
-        FB.api('/me', {fields: 'name,picture'}, function(user) {
-            if (loginBtn) {
-                loginBtn.innerHTML = `
-                    <img src="${user.picture.data.url}" style="width:22px; height:22px; border-radius:50%; vertical-align:middle; margin-right:6px;">
-                    ${user.name}
-                `;
-                loginBtn.onclick = null;
-                loginBtn.style.cursor = 'default';
-            }
-
-            if (logoutBtn) {
-                logoutBtn.style.display = 'inline-flex';
-                logoutBtn.onclick = fbLogout;
-            }
-        });
-    } else {
-        // 2. បើកផ្ទាំង Login Overlay វិញពេលមិនទាន់ Login ឬ Logout
-        if (loginGateOverlay) {
-            loginGateOverlay.style.display = 'flex';
-        }
-
-        if (loginBtn) {
-            loginBtn.innerHTML = `<span>🔵</span> ចូលគណនី (Login)`;
-            loginBtn.onclick = fbLogin;
-            loginBtn.style.cursor = 'pointer';
-        }
-
-        if (logoutBtn) {
-            logoutBtn.style.display = 'none';
-        }
-    }
-}
-        });
-    } else {
-        loginBtn.innerHTML = `<span>🔵</span> ចូលគណនី (Login)`;
-        loginBtn.onclick = fbLogin;
-        loginBtn.style.cursor = 'pointer';
-
-        if (logoutBtn) {
-            logoutBtn.style.display = 'none';
-        }
-    }
-}
-
-window.fbLogin = function() {
-    if (typeof FB === 'undefined') {
-        alert("កំពុងភ្ជាប់ទៅកាន់ Facebook... សូមរង់ចាំ ២ វិនាទី រួចចុចម្តងទៀត!");
-        return;
-    }
-    FB.login(function(response) {
-        statusChangeCallback(response);
-    }, {scope: 'public_profile'});
-};
-
-window.fbLogout = function() {
-    if (typeof FB !== 'undefined') {
-        FB.logout(function(response) {
-            statusChangeCallback(response);
-        });
-    }
-};
-
-// ភ្ជាប់ Event ទៅប៊ូតុងទាំងពីរពេលទំព័រ Load ចប់
-document.addEventListener('DOMContentLoaded', () => {
-    const loginBtn = document.getElementById('loginBtn');
-    const btnFbOverlay = document.getElementById('btnFbOverlay');
-
-    if (loginBtn) loginBtn.onclick = window.fbLogin;
-    if (btnFbOverlay) btnFbOverlay.onclick = window.fbLogin;
-});
-
-/* =========================================================
-   DASHBOARD LOGIC & CONTROLLER
+   GROUPSHARE MANAGER 2027 - CONTROLLER & AUTH
    ========================================================= */
 
 const defaultGroups = [
@@ -254,14 +12,20 @@ const defaultHistory = [
     {
         id: 1,
         url: "https://web.facebook.com/groups/116079099082791",
-        caption: "TEST Caption Post",
-        date: "8/19/2026, 9:33:34 PM",
+        caption: "Welcome to GroupShare Manager!",
+        date: new Date().toLocaleString(),
         status: "Posted"
     }
 ];
 
 let groups = JSON.parse(localStorage.getItem('gsm_groups')) || defaultGroups;
 let histories = JSON.parse(localStorage.getItem('gsm_history')) || defaultHistory;
+let currentUser = JSON.parse(localStorage.getItem('gsm_user')) || null;
+
+const loginGateOverlay = document.getElementById('loginGateOverlay');
+const loginBtn = document.getElementById('loginBtn');
+const logoutBtn = document.getElementById('logoutBtn');
+const btnOverlayLogin = document.getElementById('btnOverlayLogin');
 
 const groupsList = document.getElementById('groupsList');
 const historyList = document.getElementById('historyList');
@@ -277,6 +41,50 @@ const unselectAllBtn = document.getElementById('unselectAllBtn');
 const sharePostBtn = document.getElementById('sharePostBtn');
 const clearBtn = document.getElementById('clearBtn');
 
+// មុខងារ Auth Login / Logout
+function initAuth() {
+    if (currentUser) {
+        if (loginGateOverlay) loginGateOverlay.style.display = 'none';
+        if (loginBtn) {
+            loginBtn.innerHTML = `👤 ${currentUser.name}`;
+            loginBtn.onclick = null;
+        }
+        if (logoutBtn) {
+            logoutBtn.style.display = 'inline-flex';
+            logoutBtn.onclick = logoutUser;
+        }
+    } else {
+        if (loginGateOverlay) loginGateOverlay.style.display = 'flex';
+        if (loginBtn) {
+            loginBtn.innerHTML = `<span>🔵</span> ចូលគណនី (Login)`;
+            loginBtn.onclick = loginUser;
+        }
+        if (logoutBtn) {
+            logoutBtn.style.display = 'none';
+        }
+    }
+}
+
+function loginUser() {
+    const name = prompt("សូមបញ្ចូលឈ្មោះរបស់អ្នកដើម្បីចូលប្រើប្រាស់:", "Admin Member");
+    if (!name || name.trim() === "") return;
+
+    currentUser = { name: name.trim() };
+    localStorage.setItem('gsm_user', JSON.stringify(currentUser));
+    initAuth();
+}
+
+function logoutUser() {
+    currentUser = null;
+    localStorage.removeItem('gsm_user');
+    initAuth();
+}
+
+if (btnOverlayLogin) {
+    btnOverlayLogin.onclick = loginUser;
+}
+
+// មុខងារទូទៅក្នុង Dashboard
 function saveData() {
     localStorage.setItem('gsm_groups', JSON.stringify(groups));
     localStorage.setItem('gsm_history', JSON.stringify(histories));
@@ -341,17 +149,13 @@ function renderHistory() {
     histories.slice().reverse().forEach(item => {
         const box = document.createElement('div');
         box.className = 'history-box';
-        box.style.marginBottom = '10px';
         box.innerHTML = `
-            <div class="history-header" style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
-                <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">🔗 ${escapeHtml(item.url)}</span>
-                <div style="display: flex; align-items: center; gap: 6px;">
-                    <button type="button" class="act-btn" onclick="openLink('${escapeHtml(item.url)}')" style="padding: 2px 8px; font-size: 11px;">Open</button>
-                    <span class="badge-posted">● ${escapeHtml(item.status)}</span>
-                </div>
+            <div class="history-header">
+                <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 250px;">🔗 ${escapeHtml(item.url)}</span>
+                <span class="badge-posted">● ${escapeHtml(item.status)}</span>
             </div>
-            <div class="history-desc" style="margin-top: 6px;">"${escapeHtml(item.caption)}"</div>
-            <div class="history-date" style="margin-top: 4px;">📅 ${item.date}</div>
+            <div class="history-desc">"${escapeHtml(item.caption)}"</div>
+            <div class="history-date">📅 ${item.date}</div>
         `;
         historyList.appendChild(box);
     });
@@ -363,14 +167,12 @@ if (addGroupBtn) {
         if (!name || name.trim() === '') return;
 
         const url = prompt("បញ្ចូល Link របស់ Facebook Group (URL):");
-        const newGroup = {
+        groups.push({
             id: Date.now(),
             name: name.trim(),
             url: url ? url.trim() : '',
             selected: true
-        };
-
-        groups.push(newGroup);
+        });
         saveData();
         renderGroups();
     });
@@ -378,10 +180,7 @@ if (addGroupBtn) {
 
 if (importGroupsBtn) {
     importGroupsBtn.addEventListener('click', () => {
-        const input = prompt(
-            "សូមបញ្ចូល Links របស់ Facebook Groups (ចុះបន្ទាត់មួយ Line = មួយ Group):\n\nឧទាហរណ៍:\nhttps://facebook.com/groups/group1\nhttps://facebook.com/groups/group2"
-        );
-
+        const input = prompt("សូមបញ្ចូល Links របស់ Facebook Groups (មួយបន្ទាត់ = មួយ Group):");
         if (!input || input.trim() === '') return;
 
         const lines = input.split('\n');
@@ -472,9 +271,7 @@ window.shareSingle = function(id) {
     }
 
     if (caption && navigator.clipboard) {
-        navigator.clipboard.writeText(caption).catch(err => {
-            console.error("មិនអាច Copy បាន:", err);
-        });
+        navigator.clipboard.writeText(caption).catch(err => console.error(err));
     }
 
     const shareLink = postUrl 
@@ -497,18 +294,20 @@ if (sharePostBtn) {
         }
 
         if (caption && navigator.clipboard) {
-            navigator.clipboard.writeText(caption).catch(err => {
-                console.error("មិនអាច Copy បាន:", err);
-            });
+            navigator.clipboard.writeText(caption).catch(err => console.error(err));
         }
 
-        selectedGroups.forEach(group => {
-            const shareLink = postUrl 
-                ? `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`
-                : group.url;
+        alert(`កំពុងបើក ${selectedGroups.length} Groups។ ប្រព័ន្ធបាន Copy Caption រួចរាល់ សូម Paste (Ctrl + V) រួចចុច Post!`);
 
-            window.open(shareLink, '_blank');
-            addHistoryRecord(group.url, caption || "Post Update");
+        selectedGroups.forEach((group, index) => {
+            setTimeout(() => {
+                const shareLink = postUrl 
+                    ? `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`
+                    : group.url;
+
+                window.open(shareLink, '_blank');
+                addHistoryRecord(group.url, caption || "Post Update");
+            }, index * 1200);
         });
     });
 }
@@ -539,14 +338,7 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// ភ្ជាប់ Event ឱ្យប៊ូតុង Login ដំណើរការ
-document.addEventListener('DOMContentLoaded', () => {
-    const loginBtn = document.getElementById('loginBtn');
-    if (loginBtn) {
-        loginBtn.onclick = fbLogin;
-    }
-});
-
-// Render ដំបូងពេលបើក Page
+// ចាប់ផ្តើមដំណើរការ
+initAuth();
 renderGroups();
 renderHistory();
