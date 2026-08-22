@@ -63,21 +63,44 @@ function statusChangeCallback(response) {
 }
 
 window.fbLogin = function() {
-    if (typeof FB === 'undefined') {
-        alert("Facebook SDK មិនទាន់ដំណើរការចប់ទេ! សូមរង់ចាំ ២ វិនាទី ឬពិនិត្យមើល Internet រួចចុចម្តងទៀត។");
-        return;
-    }
-    
-    FB.login(function(response) {
-        statusChangeCallback(response);
-    }, {scope: 'public_profile'});
-};
+    const userName = prompt("សូមបញ្ចូលឈ្មោះគណនីរបស់អ្នកដើម្បីចូលប្រើប្រាស់:", "Admin User");
+    if (!userName) return;
 
-window.fbLogout = function() {
-    if (typeof FB !== 'undefined') {
-        FB.logout(function(response) {
-            statusChangeCallback(response);
-        });
+    const fakeUser = {
+        name: userName,
+        picture: {
+            data: {
+                url: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+            }
+        }
+    };
+
+    const loginGateOverlay = document.getElementById('loginGateOverlay');
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    // បិទផ្ទាំង Login Overlay
+    if (loginGateOverlay) loginGateOverlay.style.display = 'none';
+
+    // បង្ហាញ Profile លើ Navbar
+    if (loginBtn) {
+        loginBtn.innerHTML = `
+            <img src="${fakeUser.picture.data.url}" style="width:22px; height:22px; border-radius:50%; vertical-align:middle; margin-right:6px;">
+            ${fakeUser.name}
+        `;
+        loginBtn.onclick = null;
+    }
+
+    if (logoutBtn) {
+        logoutBtn.style.display = 'inline-flex';
+        logoutBtn.onclick = () => {
+            if (loginGateOverlay) loginGateOverlay.style.display = 'flex';
+            if (loginBtn) {
+                loginBtn.innerHTML = `<span>🔵</span> ចូលគណនី (Login)`;
+                loginBtn.onclick = window.fbLogin;
+            }
+            logoutBtn.style.display = 'none';
+        };
     }
 };
 /* =========================================================
