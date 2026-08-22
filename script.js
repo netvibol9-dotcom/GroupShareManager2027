@@ -1,6 +1,10 @@
 /* =========================================================
-   GROUPSHARE MANAGER 2027 - CONTROLLER & AUTH
+   GROUPSHARE MANAGER 2027 - REAL FACEBOOK AUTHENTICATION
    ========================================================= */
+
+// កំណត់ App ID និង Link Redirect របស់អ្នក
+const FB_APP_ID = "2149167585663122"; 
+const REDIRECT_URI = "https://netvibol9-dotcom.github.io/GroupShareManager2027/";
 
 const defaultGroups = [
     { id: 1, name: "Facebook Group 1", url: "https://web.facebook.com/groups/116079099082791", selected: true },
@@ -8,20 +12,11 @@ const defaultGroups = [
     { id: 3, name: "Facebook Group 3", url: "", selected: false }
 ];
 
-const defaultHistory = [
-    {
-        id: 1,
-        url: "https://web.facebook.com/groups/116079099082791",
-        caption: "Welcome to GroupShare Manager!",
-        date: new Date().toLocaleString(),
-        status: "Posted"
-    }
-];
-
 let groups = JSON.parse(localStorage.getItem('gsm_groups')) || defaultGroups;
-let histories = JSON.parse(localStorage.getItem('gsm_history')) || defaultHistory;
+let histories = JSON.parse(localStorage.getItem('gsm_history')) || [];
 let currentUser = JSON.parse(localStorage.getItem('gsm_user')) || null;
 
+// ចាប់ DOM Elements
 const loginGateOverlay = document.getElementById('loginGateOverlay');
 const loginBtn = document.getElementById('loginBtn');
 const logoutBtn = document.getElementById('logoutBtn');
@@ -41,12 +36,57 @@ const unselectAllBtn = document.getElementById('unselectAllBtn');
 const sharePostBtn = document.getElementById('sharePostBtn');
 const clearBtn = document.getElementById('clearBtn');
 
-// មុខងារ Auth Login / Logout
+/* =========================================================
+   មុខងារ FACEBOOK REAL LOGIN & OAUTH HANDLER
+   ========================================================= */
+
+// ១. ចុច Login វានឹងបើកផ្ទាំង Facebook ឱ្យ User វាយ Email/Password ពិតប្រាកដ
+function triggerFacebookLogin() {
+    const authUrl = `https://www.facebook.com/v19.0/dialog/oauth?client_id=${FB_APP_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=public_profile`;
+    window.location.href = authUrl;
+}
+
+// ២. ពេល Login ចប់ Facebook នឹងរុញត្រឡប់មកវិញជាមួយ Token -> យើងទាញយក Profile ពិត
+function checkFacebookCallback() {
+    const hash = window.location.hash;
+    if (hash && hash.includes("access_token=")) {
+        const params = new URLSearchParams(hash.substring(1));
+        const accessToken = params.get("access_token");
+
+        if (accessToken) {
+            // សួរយកព័ត៌មាន Profile ពី Facebook Graph API
+            fetch(`https://graph.facebook.com/me?fields=id,name,picture.type(large)&access_token=${accessToken}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.name) {
+                        currentUser = {
+                            id: data.id,
+                            name: data.name,
+                            picture: data.picture ? data.picture.data.url : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                        };
+                        localStorage.setItem('gsm_user', JSON.stringify(currentUser));
+                        // សម្អាត Hash URL ចេញ
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                        initAuth();
+                    }
+                })
+                .catch(err => {
+                    console.error("Facebook Login Error:", err);
+                    alert("មានបញ្ហាក្នុងការទាញយក Profile ពី Facebook!");
+                });
+        }
+    }
+}
+
+// ៣. បង្ហាញស្ថានភាព Login / Logout
 function initAuth() {
     if (currentUser) {
         if (loginGateOverlay) loginGateOverlay.style.display = 'none';
         if (loginBtn) {
-            loginBtn.innerHTML = `👤 ${currentUser.name}`;
+            loginBtn.innerHTML = `
+                <img src="${currentUser.picture}" style="width:24px; height:24px; border-radius:50%; vertical-align:middle; margin-right:6px;">
+                ${escapeHtml(currentUser.name)}
+            `;
             loginBtn.onclick = null;
         }
         if (logoutBtn) {
@@ -57,21 +97,12 @@ function initAuth() {
         if (loginGateOverlay) loginGateOverlay.style.display = 'flex';
         if (loginBtn) {
             loginBtn.innerHTML = `<span>🔵</span> ចូលគណនី (Login)`;
-            loginBtn.onclick = loginUser;
+            loginBtn.onclick = triggerFacebookLogin;
         }
         if (logoutBtn) {
             logoutBtn.style.display = 'none';
         }
     }
-}
-
-function loginUser() {
-    const name = prompt("សូមបញ្ចូលឈ្មោះរបស់អ្នកដើម្បីចូលប្រើប្រាស់:", "Admin Member");
-    if (!name || name.trim() === "") return;
-
-    currentUser = { name: name.trim() };
-    localStorage.setItem('gsm_user', JSON.stringify(currentUser));
-    initAuth();
 }
 
 function logoutUser() {
@@ -81,10 +112,13 @@ function logoutUser() {
 }
 
 if (btnOverlayLogin) {
-    btnOverlayLogin.onclick = loginUser;
+    btnOverlayLogin.onclick = triggerFacebookLogin;
 }
 
-// មុខងារទូទៅក្នុង Dashboard
+/* =========================================================
+   DASHBOARD FUNCTIONS (គ្រប់គ្រង GROUPS & SHARE)
+   ========================================================= */
+
 function saveData() {
     localStorage.setItem('gsm_groups', JSON.stringify(groups));
     localStorage.setItem('gsm_history', JSON.stringify(histories));
@@ -338,7 +372,8 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// ចាប់ផ្តើមដំណើរការ
+// ចាប់ផ្តើមពិនិត្យ Login
+checkFacebookCallback();
 initAuth();
 renderGroups();
 renderHistory();
