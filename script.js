@@ -103,6 +103,35 @@ window.fbLogin = function() {
         };
     }
 };
+
+    const loginGateOverlay = document.getElementById('loginGateOverlay');
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    // បិទផ្ទាំង Login Overlay
+    if (loginGateOverlay) loginGateOverlay.style.display = 'none';
+
+    // បង្ហាញ Profile លើ Navbar
+    if (loginBtn) {
+        loginBtn.innerHTML = `
+            <img src="${fakeUser.picture.data.url}" style="width:22px; height:22px; border-radius:50%; vertical-align:middle; margin-right:6px;">
+            ${fakeUser.name}
+        `;
+        loginBtn.onclick = null;
+    }
+
+    if (logoutBtn) {
+        logoutBtn.style.display = 'inline-flex';
+        logoutBtn.onclick = () => {
+            if (loginGateOverlay) loginGateOverlay.style.display = 'flex';
+            if (loginBtn) {
+                loginBtn.innerHTML = `<span>🔵</span> ចូលគណនី (Login)`;
+                loginBtn.onclick = window.fbLogin;
+            }
+            logoutBtn.style.display = 'none';
+        };
+    }
+};
 /* =========================================================
    FACEBOOK LOGIN SDK
    ========================================================= */
