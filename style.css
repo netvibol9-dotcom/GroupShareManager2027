@@ -611,3 +611,105 @@ textarea {
     color: var(--text-gray);
     margin-top: 6px;
 }
+
+/* =========================================================
+   DASHBOARD TITLE BOX
+   ========================================================= */
+.title-box {
+    background: #ffffff;
+    padding: 22px 28px;
+    border-radius: 18px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+    margin-bottom: 24px;
+}
+
+.title-box h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.title-box p {
+    font-size: 0.92rem;
+    color: #64748b;
+}
+
+/* =========================================================
+   BUTTON HOVER EFFECTS (ចេញពណ៌ច្បាស់ពេលយក MOUSE ប៉ះ)
+   ========================================================= */
+
+/* ប៊ូតុង Share ធំ (ស្វាយក្រម៉ៅ) */
+.btn-primary {
+    transition: all 0.25s ease;
+}
+.btn-primary:hover {
+    background: #3730a3 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(79, 70, 229, 0.35);
+}
+
+/* ប៊ូតុង Clear (ប្រផេះ -> ក្រហមព្រាល) */
+.btn-clear {
+    transition: all 0.25s ease;
+}
+.btn-clear:hover {
+    background: #fee2e2 !important;
+    color: #dc2626 !important;
+    border-color: #fca5a5 !important;
+}
+
+/* ប៊ូតុង + បន្ថែម និង Import ច្រើន (ខៀវ) */
+.btn-sm {
+    transition: all 0.2s ease;
+}
+#addGroupBtn:hover {
+    background: #4f46e5 !important;
+    color: #ffffff !important;
+    border-color: #4f46e5 !important;
+    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+}
+#importGroupsBtn:hover {
+    background: #0284c7 !important;
+    color: #ffffff !important;
+    border-color: #0284c7 !important;
+    box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
+}
+
+/* ប៊ូតុងសកម្មភាពលើ Groups នីមួយៗ (Open, Share, Edit, Delete) */
+.act-btn {
+    transition: all 0.2s ease;
+}
+
+/* Open -> ខៀវខ្ចី */
+.act-btn:not(.share):not(.delete):not(:nth-child(3)):hover:not(:disabled) {
+    background: #0284c7 !important;
+    color: #ffffff !important;
+    border-color: #0284c7 !important;
+    box-shadow: 0 4px 8px rgba(2, 132, 199, 0.3);
+}
+
+/* Share -> ស្វាយ */
+.act-btn.share:hover:not(:disabled) {
+    background: #4f46e5 !important;
+    color: #ffffff !important;
+    border-color: #4f46e5 !important;
+    box-shadow: 0 4px 8px rgba(79, 70, 229, 0.3);
+}
+
+/* Edit -> លឿងទុំ/ទឹកក្រូច */
+.act-btn:nth-child(3):hover:not(:disabled) {
+    background: #d97706 !important;
+    color: #ffffff !important;
+    border-color: #d97706 !important;
+    box-shadow: 0 4px 8px rgba(217, 119, 6, 0.3);
+}
+
+/* Delete -> ក្រហម */
+.act-btn.delete:hover:not(:disabled) {
+    background: #dc2626 !important;
+    color: #ffffff !important;
+    border-color: #dc2626 !important;
+    box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3);
+}
