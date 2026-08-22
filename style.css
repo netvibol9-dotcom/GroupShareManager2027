@@ -3,7 +3,7 @@
 :root {
     --primary: #4f46e5;
     --primary-hover: #4338ca;
-    --bg: #f8fafc;
+    --bg: #f1f5f9;
     --card-bg: #ffffff;
     --text-main: #0f172a;
     --text-gray: #64748b;
@@ -29,81 +29,11 @@ body {
 }
 
 /* =========================================================
-   LOGIN OVERLAY MODAL
-   ========================================================= */
-.login-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.65);
-    backdrop-filter: blur(10px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    padding: 20px;
-}
-
-.login-modal-card {
-    background: var(--card-bg);
-    padding: 40px 32px;
-    border-radius: 24px;
-    text-align: center;
-    max-width: 420px;
-    width: 100%;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.login-icon-wrap {
-    width: 72px;
-    height: 72px;
-    background: #eef2ff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 20px auto;
-}
-
-.login-modal-card h2 {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--text-main);
-    margin-bottom: 8px;
-}
-
-.login-modal-card p {
-    font-size: 14px;
-    color: var(--text-gray);
-    line-height: 1.6;
-    margin-bottom: 24px;
-}
-
-.btn-fb-full {
-    width: 100%;
-    background: linear-gradient(135deg, #1877f2 0%, #0d65d9 100%);
-    color: #ffffff;
-    font-size: 15px;
-    font-weight: 600;
-    padding: 14px 20px;
-    border: none;
-    border-radius: 14px;
-    cursor: pointer;
-    box-shadow: 0 10px 15px -3px rgba(24, 119, 242, 0.3);
-    transition: all 0.2s ease;
-}
-
-.btn-fb-full:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 20px -3px rgba(24, 119, 242, 0.4);
-}
-
-/* =========================================================
-   TOP NAVBAR
+   1. TOP NAVBAR (ផ្ទៃ GRADIENT ស្វាយខៀវងងឹត)
    ========================================================= */
 .top-navbar {
-    background: #ffffff;
-    border-bottom: 1px solid var(--border-color);
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #4338ca 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding: 16px 40px;
     display: flex;
     justify-content: space-between;
@@ -111,19 +41,18 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .brand h2 {
     font-size: 20px;
     font-weight: 700;
-    background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #ffffff;
 }
 
 .brand p {
     font-size: 12px;
-    color: var(--text-gray);
+    color: rgba(255, 255, 255, 0.8);
 }
 
 #authContainer {
@@ -136,19 +65,20 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: #f1f5f9;
-    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
     font-size: 13.5px;
     font-weight: 600;
     padding: 8px 16px;
     border-radius: 12px;
-    border: 1px solid var(--border-color);
+    border: 1px solid rgba(255, 255, 255, 0.25);
     cursor: pointer;
+    backdrop-filter: blur(5px);
     transition: 0.2s;
 }
 
 .btn-login:hover {
-    background: #e2e8f0;
+    background: rgba(255, 255, 255, 0.25);
 }
 
 #logoutBtn {
@@ -168,14 +98,39 @@ body {
 }
 
 /* =========================================================
-   APP LAYOUT & STATS CARDS WITH HOVER ANIMATION
+   2. DASHBOARD TITLE BOX (ផ្ទៃ GRADIENT ស្វាយកាត់ខៀវ)
    ========================================================= */
 .app-container {
     max-width: 1280px;
-    margin: 32px auto;
+    margin: 28px auto;
     padding: 0 24px;
 }
 
+.title-box {
+    background: linear-gradient(135deg, #4338ca 0%, #6366f1 50%, #0284c7 100%);
+    padding: 24px 30px;
+    border-radius: 20px;
+    border: none;
+    box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.3);
+    margin-bottom: 24px;
+    color: #ffffff;
+}
+
+.title-box h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 6px;
+}
+
+.title-box p {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* =========================================================
+   3. STATS ROW
+   ========================================================= */
 .stats-row {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -192,8 +147,6 @@ body {
     align-items: center;
     gap: 18px;
     cursor: pointer;
-    position: relative;
-    overflow: hidden;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
 }
@@ -206,7 +159,7 @@ body {
     align-items: center;
     justify-content: center;
     font-size: 1.4rem;
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: transform 0.3s ease;
 }
 
 .stat-icon.purple { background: #ede9fe; color: #7c3aed; }
@@ -217,66 +170,21 @@ body {
     font-size: 26px;
     font-weight: 800;
     color: var(--text-main);
-    transition: color 0.25s ease;
 }
 
 .stat-info p {
     font-size: 13.5px;
     color: var(--text-gray);
     font-weight: 600;
-    transition: color 0.25s ease;
 }
 
-/* Hover: Groups សរុប */
-.stat-card:nth-child(1):hover {
-    background: linear-gradient(145deg, #ffffff, #f5f3ff);
-    border-color: #c4b5fd;
+.stat-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 12px 24px -4px rgba(124, 58, 237, 0.16);
-}
-.stat-card:nth-child(1):hover .stat-icon {
-    transform: scale(1.12) rotate(-6deg);
-    background: #7c3aed;
-    color: #ffffff;
-}
-.stat-card:nth-child(1):hover .stat-info h3 {
-    color: #7c3aed;
-}
-
-/* Hover: បាន Share ជោគជ័យ */
-.stat-card:nth-child(2):hover {
-    background: linear-gradient(145deg, #ffffff, #f0fdf4);
-    border-color: #86efac;
-    transform: translateY(-5px);
-    box-shadow: 0 12px 24px -4px rgba(22, 163, 74, 0.16);
-}
-.stat-card:nth-child(2):hover .stat-icon {
-    transform: scale(1.12) rotate(6deg);
-    background: #16a34a;
-    color: #ffffff;
-}
-.stat-card:nth-child(2):hover .stat-info h3 {
-    color: #16a34a;
-}
-
-/* Hover: ក្រុមដែលបានជ្រើសរើស */
-.stat-card:nth-child(3):hover {
-    background: linear-gradient(145deg, #ffffff, #fffbeb);
-    border-color: #fde68a;
-    transform: translateY(-5px);
-    box-shadow: 0 12px 24px -4px rgba(217, 119, 6, 0.16);
-}
-.stat-card:nth-child(3):hover .stat-icon {
-    transform: scale(1.12) rotate(-6deg);
-    background: #d97706;
-    color: #ffffff;
-}
-.stat-card:nth-child(3):hover .stat-info h3 {
-    color: #d97706;
+    box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.1);
 }
 
 /* =========================================================
-   WORKSPACE GRID
+   4. WORKSPACE & BUTTON HOVERS
    ========================================================= */
 .workspace-grid {
     display: grid;
@@ -329,7 +237,6 @@ textarea, input[type="text"] {
     border: 1.5px solid var(--border-color);
     font-size: 14px;
     outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
     background: #fdfdfd;
 }
 
@@ -364,7 +271,7 @@ textarea {
 }
 
 .btn-primary:hover {
-    transform: translateY(-1px);
+    transform: translateY(-2px);
     box-shadow: 0 6px 14px rgba(79, 70, 229, 0.35);
 }
 
@@ -382,8 +289,9 @@ textarea {
 }
 
 .btn-clear:hover {
-    background: #f1f5f9;
-    transform: translateY(-1px);
+    background: #fee2e2;
+    color: #dc2626;
+    border-color: #fca5a5;
 }
 
 .btn-group {
@@ -403,8 +311,16 @@ textarea {
     transition: 0.2s;
 }
 
-.btn-sm:hover {
-    background: #f1f5f9;
+#addGroupBtn:hover {
+    background: #4f46e5;
+    color: #ffffff;
+    border-color: #4f46e5;
+}
+
+#importGroupsBtn:hover {
+    background: #0284c7;
+    color: #ffffff;
+    border-color: #0284c7;
 }
 
 .selection-bar {
@@ -425,13 +341,6 @@ textarea {
     font-weight: 600;
 }
 
-.link-btn:hover {
-    text-decoration: underline;
-}
-
-/* =========================================================
-   GROUPS LIST & DISTINCT ACTION BUTTON HOVERS
-   ========================================================= */
 .groups-list {
     max-height: 310px;
     overflow-y: auto;
@@ -506,58 +415,35 @@ textarea {
     cursor: pointer;
     font-weight: 500;
     color: var(--text-main);
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: 0.2s;
 }
 
-/* 1. Open Button -> Sky Blue Hover */
-.act-btn:not(.share):not(.delete):not(:nth-child(3)) {
-    background: #f1f5f9;
-    color: #334155;
-}
+/* Open -> ខៀវ */
 .act-btn:not(.share):not(.delete):not(:nth-child(3)):hover:not(:disabled) {
     background: #0284c7;
     color: #ffffff;
     border-color: #0284c7;
-    box-shadow: 0 4px 10px rgba(2, 132, 199, 0.25);
 }
 
-/* 2. Share Button -> Indigo Hover */
-.act-btn.share {
-    background: #eef2ff;
-    color: #4f46e5;
-    border-color: #c7d2fe;
-}
+/* Share -> ស្វាយ */
 .act-btn.share:hover:not(:disabled) {
     background: #4f46e5;
     color: #ffffff;
     border-color: #4f46e5;
-    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25);
 }
 
-/* 3. Edit Button -> Amber Hover */
-.act-btn:nth-child(3) {
-    background: #fffbeb;
-    color: #d97706;
-    border-color: #fde68a;
-}
+/* Edit -> ទឹកក្រូច */
 .act-btn:nth-child(3):hover:not(:disabled) {
     background: #d97706;
     color: #ffffff;
     border-color: #d97706;
-    box-shadow: 0 4px 10px rgba(217, 119, 6, 0.25);
 }
 
-/* 4. Delete Button -> Red Hover */
-.act-btn.delete {
-    background: #fef2f2;
-    color: #dc2626;
-    border-color: #fecdd3;
-}
+/* Delete -> ក្រហម */
 .act-btn.delete:hover:not(:disabled) {
     background: #dc2626;
     color: #ffffff;
     border-color: #dc2626;
-    box-shadow: 0 4px 10px rgba(220, 38, 38, 0.25);
 }
 
 .act-btn:disabled {
@@ -566,7 +452,7 @@ textarea {
 }
 
 /* =========================================================
-   HISTORY LIST
+   5. HISTORY LIST & LOGIN OVERLAY
    ========================================================= */
 .history-section {
     margin-top: 10px;
@@ -612,104 +498,66 @@ textarea {
     margin-top: 6px;
 }
 
-/* =========================================================
-   DASHBOARD TITLE BOX
-   ========================================================= */
-.title-box {
-    background: #ffffff;
-    padding: 22px 28px;
-    border-radius: 18px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+.login-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 20px;
+}
+
+.login-modal-card {
+    background: var(--card-bg);
+    padding: 40px 32px;
+    border-radius: 24px;
+    text-align: center;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.login-icon-wrap {
+    width: 72px;
+    height: 72px;
+    background: #eef2ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px auto;
+}
+
+.login-modal-card h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 8px;
+}
+
+.login-modal-card p {
+    font-size: 14px;
+    color: var(--text-gray);
+    line-height: 1.6;
     margin-bottom: 24px;
 }
 
-.title-box h1 {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 4px;
+.btn-fb-full {
+    width: 100%;
+    background: linear-gradient(135deg, #1877f2 0%, #0d65d9 100%);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: 0.2s;
 }
 
-.title-box p {
-    font-size: 0.92rem;
-    color: #64748b;
-}
-
-/* =========================================================
-   BUTTON HOVER EFFECTS (ចេញពណ៌ច្បាស់ពេលយក MOUSE ប៉ះ)
-   ========================================================= */
-
-/* ប៊ូតុង Share ធំ (ស្វាយក្រម៉ៅ) */
-.btn-primary {
-    transition: all 0.25s ease;
-}
-.btn-primary:hover {
-    background: #3730a3 !important;
+.btn-fb-full:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(79, 70, 229, 0.35);
-}
-
-/* ប៊ូតុង Clear (ប្រផេះ -> ក្រហមព្រាល) */
-.btn-clear {
-    transition: all 0.25s ease;
-}
-.btn-clear:hover {
-    background: #fee2e2 !important;
-    color: #dc2626 !important;
-    border-color: #fca5a5 !important;
-}
-
-/* ប៊ូតុង + បន្ថែម និង Import ច្រើន (ខៀវ) */
-.btn-sm {
-    transition: all 0.2s ease;
-}
-#addGroupBtn:hover {
-    background: #4f46e5 !important;
-    color: #ffffff !important;
-    border-color: #4f46e5 !important;
-    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
-}
-#importGroupsBtn:hover {
-    background: #0284c7 !important;
-    color: #ffffff !important;
-    border-color: #0284c7 !important;
-    box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
-}
-
-/* ប៊ូតុងសកម្មភាពលើ Groups នីមួយៗ (Open, Share, Edit, Delete) */
-.act-btn {
-    transition: all 0.2s ease;
-}
-
-/* Open -> ខៀវខ្ចី */
-.act-btn:not(.share):not(.delete):not(:nth-child(3)):hover:not(:disabled) {
-    background: #0284c7 !important;
-    color: #ffffff !important;
-    border-color: #0284c7 !important;
-    box-shadow: 0 4px 8px rgba(2, 132, 199, 0.3);
-}
-
-/* Share -> ស្វាយ */
-.act-btn.share:hover:not(:disabled) {
-    background: #4f46e5 !important;
-    color: #ffffff !important;
-    border-color: #4f46e5 !important;
-    box-shadow: 0 4px 8px rgba(79, 70, 229, 0.3);
-}
-
-/* Edit -> លឿងទុំ/ទឹកក្រូច */
-.act-btn:nth-child(3):hover:not(:disabled) {
-    background: #d97706 !important;
-    color: #ffffff !important;
-    border-color: #d97706 !important;
-    box-shadow: 0 4px 8px rgba(217, 119, 6, 0.3);
-}
-
-/* Delete -> ក្រហម */
-.act-btn.delete:hover:not(:disabled) {
-    background: #dc2626 !important;
-    color: #ffffff !important;
-    border-color: #dc2626 !important;
-    box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3);
 }
